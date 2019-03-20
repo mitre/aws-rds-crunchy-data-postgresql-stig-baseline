@@ -1,0 +1,8 @@
+---
+lockfile_version: 1
+depends:
+- name: pgstigcheck-inspec
+  resolved_source:
+    git: https://github.com/CrunchyData/pgstigcheck-inspec
+    ref: b702f8bfbdbf62ef4dc889512e6f753258b370fb
+  version_constraints: []
