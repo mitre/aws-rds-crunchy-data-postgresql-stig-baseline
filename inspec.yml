@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-name: stig-aws-rds-postgres-baseline
+name: aws-rds-crunchy-data-postgresql-9-stig-baseline
 title: STIG Baseline for AWS RDS PostgreSQL 9.x
 maintainer: MITRE InSpec Team
 copyright: The MITRE Corporation, 2018
