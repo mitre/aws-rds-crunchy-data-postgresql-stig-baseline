@@ -284,7 +284,7 @@ include_controls 'pgstigcheck-inspec' do
     $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
     $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
 
-    sql = postgres_session(PG_DBA, PG_DBA_PASSWORD, PG_HOST)
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     authorized_owners = PG_SUPERUSERS
 
@@ -484,7 +484,7 @@ include_controls 'pgstigcheck-inspec' do
   $ sudo su - postgres
   $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
 
-  sql = postgres_session(PG_DBA, PG_DBA_PASSWORD, PG_HOST)
+  sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
   authorized_owners = PG_SUPERUSERS
 
@@ -689,7 +689,7 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER FUNCTION <function_name> SECURITY INVOKER;\""
 
-    sql = postgres_session(PG_DBA, PG_DBA_PASSWORD, PG_HOST)
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     security_definer_sql = "SELECT nspname, proname, prosecdef "\
       "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
@@ -816,7 +816,7 @@ end
     ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
 
     privileges = %w(rolcreatedb rolcreaterole rolsuper)
-    sql = postgres_session(PG_DBA, PG_DBA_PASSWORD, PG_HOST)
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [PG_DB])
@@ -898,7 +898,7 @@ end
     Use REVOKE to remove privileges from databases and schemas:
     $ psql -c \"REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;"
 
-    sql = postgres_session(PG_DBA, PG_DBA_PASSWORD, PG_HOST)
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [PG_DB])
