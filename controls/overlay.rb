@@ -325,7 +325,7 @@ include_controls 'pgstigcheck-inspec' do
         "accepting connections"
       connection_error_regex = Regexp.new(connection_error)
       
-      sql_result=sql.query(schemas_sql, [database])
+      sql_result = sql.query(schemas_sql, [database])
 
       if sql_result.empty?
         describe 'There are no database schemas' do
@@ -345,7 +345,7 @@ include_controls 'pgstigcheck-inspec' do
         end
       end
 
-      sql_result=sql.query(functions_sql, [database])
+      sql_result = sql.query(functions_sql, [database])
 
       if sql_result.empty?
         describe 'There are no database functions' do
@@ -387,7 +387,7 @@ include_controls 'pgstigcheck-inspec' do
             " AND n.nspname !~ '^pg_toast';"
         end
 
-        sql_result=sql.query(objects_sql, [database])
+        sql_result = sql.query(objects_sql, [database])
 
         if sql_result.empty?
           describe 'There are no database functions' do
