@@ -215,201 +215,177 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72883" do
-    title "PostgreSQL must enforce discretionary access control policies, as
-    defined by the data owner, over defined subjects and objects."
-    desc  "Discretionary Access Control (DAC) is based on the notion that
-    individual users are \"owners\" of objects and therefore have discretion over
-    who should be authorized to access the object and in which mode (e.g., read or
-    write). Ownership is usually acquired as a consequence of creating the object
-    or via specified ownership assignment. DAC allows the owner to determine who
-    will have access to objects they control. An example of DAC includes
-    user-controlled table permissions.
-    When discretionary access control policies are implemented, subjects are not
-    constrained with regard to what actions they can take with information for
-    which they have already been granted access. Thus, subjects that have been
-    granted access to information are not prevented from passing (i.e., the
-    subjects have the discretion to pass) the information to other subjects or
-    objects.
-    A subject that is constrained in its operation by Mandatory Access Control
-    policies is still able to operate under the less rigorous constraints of this
-    requirement. Thus, while Mandatory Access Control imposes constraints
-    preventing a subject from passing information to another subject operating at
-    a different sensitivity level, this requirement permits the subject to pass
-    the information to any subject at the same sensitivity level.
-    The policy is bounded by the information system boundary. Once the information
-    is passed outside of the control of the information system, additional means
-    may be required to ensure the constraints remain in effect. While the older,
-    more traditional definitions of discretionary access control require i
-    dentity-based access control, that limitation is not required for this use of
-    discretionary access control."
-    impact 0.5
-    tag "severity": "medium"
-    tag "gtitle": "SRG-APP-000328-DB-000301"
-    tag "gid": "V-72883"
-    tag "rid": "SV-87535r1_rule"
-    tag "stig_id": "PGS9-00-002200"
-    tag "cci": ["CCI-002165"]
-    tag "nist": ["AC-3 (4)", "Rev_4"]
-    tag "check": "Review system documentation to identify the required
-    discretionary access control (DAC).
-    Review the security configuration of the database and PostgreSQL. If
-    applicable, review the security configuration of the application(s) using the
-    database.
-    If the discretionary access control defined in the documentation is not
-    implemented in the security configuration, this is a finding.
-    If any database objects are found to be owned by users not authorized to own
-    database objects, this is a finding.
-    To check the ownership of objects in the database, as the database
-    administrator, run the following:
-    $ sudo su - postgres
-    $ psql -c \"\\dn *.*\"
-    $ psql -c \"\\dt *.*\"
-    $ psql -c \"\\ds *.*\"
-    $ psql -c \"\\dv *.*\"
-    $ psql -c \"\\df+ *.*\"
-    If any role is given privileges to objects it should not have, this is a
-    finding."
-    tag "fix": "Implement the organization's DAC policy in the security
-    configuration of the database and PostgreSQL, and, if applicable, the security
-    configuration of the application(s) using the database.
-    To GRANT privileges to roles, as the database administrator (shown here as
-    \"postgres\"), run statements like the following examples:
-    $ sudo su - postgres
-    $ psql -c \"CREATE SCHEMA test\"
-    $ psql -c \"GRANT CREATE ON SCHEMA test TO bob\"
-    $ psql -c \"CREATE TABLE test.test_table(id INT)\"
-    $ psql -c \"GRANT SELECT ON TABLE test.test_table TO bob\"
-    To REVOKE privileges to roles, as the database administrator (shown here as
-    \"postgres\"), run statements like the following examples:
-    $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
-    $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
+  title "PostgreSQL must enforce discretionary access control policies, as
+  defined by the data owner, over defined subjects and objects."
+  desc  "Discretionary Access Control (DAC) is based on the notion that
+  individual users are \"owners\" of objects and therefore have discretion over
+  who should be authorized to access the object and in which mode (e.g., read or
+  write). Ownership is usually acquired as a consequence of creating the object
+  or via specified ownership assignment. DAC allows the owner to determine who
+  will have access to objects they control. An example of DAC includes
+  user-controlled table permissions.
+  When discretionary access control policies are implemented, subjects are not
+  constrained with regard to what actions they can take with information for
+  which they have already been granted access. Thus, subjects that have been
+  granted access to information are not prevented from passing (i.e., the
+  subjects have the discretion to pass) the information to other subjects or
+  objects.
+  A subject that is constrained in its operation by Mandatory Access Control
+  policies is still able to operate under the less rigorous constraints of this
+  requirement. Thus, while Mandatory Access Control imposes constraints
+  preventing a subject from passing information to another subject operating at
+  a different sensitivity level, this requirement permits the subject to pass
+  the information to any subject at the same sensitivity level.
+  The policy is bounded by the information system boundary. Once the information
+  is passed outside of the control of the information system, additional means
+  may be required to ensure the constraints remain in effect. While the older,
+  more traditional definitions of discretionary access control require i
+  dentity-based access control, that limitation is not required for this use of
+  discretionary access control."
+  impact 0.5
+  tag "severity": "medium"
+  tag "gtitle": "SRG-APP-000328-DB-000301"
+  tag "gid": "V-72883"
+  tag "rid": "SV-87535r1_rule"
+  tag "stig_id": "PGS9-00-002200"
+  tag "cci": ["CCI-002165"]
+  tag "nist": ["AC-3 (4)", "Rev_4"]
+  tag "check": "Review system documentation to identify the required
+  discretionary access control (DAC).
+  Review the security configuration of the database and PostgreSQL. If
+  applicable, review the security configuration of the application(s) using the
+  database.
+  If the discretionary access control defined in the documentation is not
+  implemented in the security configuration, this is a finding.
+  If any database objects are found to be owned by users not authorized to own
+  database objects, this is a finding.
+  To check the ownership of objects in the database, as the database
+  administrator, run the following:
+  $ sudo su - postgres
+  $ psql -c \"\\dn *.*\"
+  $ psql -c \"\\dt *.*\"
+  $ psql -c \"\\ds *.*\"
+  $ psql -c \"\\dv *.*\"
+  $ psql -c \"\\df+ *.*\"
+  If any role is given privileges to objects it should not have, this is a
+  finding."
+  tag "fix": "Implement the organization's DAC policy in the security
+  configuration of the database and PostgreSQL, and, if applicable, the security
+  configuration of the application(s) using the database.
+  To GRANT privileges to roles, as the database administrator (shown here as
+  \"postgres\"), run statements like the following examples:
+  $ sudo su - postgres
+  $ psql -c \"CREATE SCHEMA test\"
+  $ psql -c \"GRANT CREATE ON SCHEMA test TO bob\"
+  $ psql -c \"CREATE TABLE test.test_table(id INT)\"
+  $ psql -c \"GRANT SELECT ON TABLE test.test_table TO bob\"
+  To REVOKE privileges to roles, as the database administrator (shown here as
+  \"postgres\"), run statements like the following examples:
+  $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
+  $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+  sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
-    authorized_owners = attribute('pg_superusers')
+  authorized_owners = attribute('pg_superusers')
+  PG_DB = attribute('pg_db')
+  PG_OWNER = attribute('pg_owner')
 
-    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = 'attribute('pg_db')';"
-    databases_query = sql.query(databases_sql, [attribute('pg_db')])
-    databases = databases_query.lines
-    types = %w(t s v) # tables, sequences views
+  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
+  databases_query = sql.query(databases_sql, [PG_DB])
+  databases = databases_query.lines
+  types = %w(t s v) # tables, sequences views
 
-    databases.each do |database|
-      schemas_sql = ''
-      functions_sql = ''
+  databases.each do |database|
+    schemas_sql = ''
+    functions_sql = ''
+
+    if database == 'postgres'
+      schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "FROM pg_catalog.pg_namespace n "\
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+      functions_sql = "SELECT n.nspname, p.proname, "\
+        "pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "FROM pg_catalog.pg_proc p "\
+        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+    else
+      schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "FROM pg_catalog.pg_namespace n "\
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+        "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
+      functions_sql = "SELECT n.nspname, p.proname, "\
+        "pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "FROM pg_catalog.pg_proc p "\
+        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
+        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+        "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
+    end
+
+    connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
+      "accepting connections"
+    connection_error_regex = Regexp.new(connection_error)
+    
+    sql_result=sql.query(schemas_sql, [database])
+
+    describe.one do
+      describe sql_result do
+        its('output') { should eq '' }
+      end
+
+      describe sql_result do
+        it { should match connection_error_regex }
+      end
+    end
+
+    sql_result=sql.query(functions_sql, [database])
+
+    describe.one do
+      describe sql_result do
+        its('output') { should eq '' }
+      end
+
+      describe sql_result do
+        it { should match connection_error_regex }
+      end
+    end
+
+    types.each do |type|
+      objects_sql = ''
 
       if database == 'postgres'
-        schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "FROM pg_catalog.pg_namespace n "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
-        functions_sql = "SELECT n.nspname, p.proname, "\
-          "pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "FROM pg_catalog.pg_proc p "\
-          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
+        objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
+          "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
+          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+          "WHERE c.relkind IN ('#{type}','s','') "\
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+          "AND n.nspname !~ '^pg_toast';"
       else
-        schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "FROM pg_catalog.pg_namespace n "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
+        objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
+          "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
+          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+          "WHERE c.relkind IN ('#{type}','s','') "\
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
           "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-          "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
-        functions_sql = "SELECT n.nspname, p.proname, "\
-          "pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "FROM pg_catalog.pg_proc p "\
-          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-          "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
+          "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
+          " AND n.nspname !~ '^pg_toast';"
       end
 
-      connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
-        "accepting connections"
-      connection_error_regex = Regexp.new(connection_error)
-      
-      sql_result = sql.query(schemas_sql, [database])
+      sql_result=sql.query(objects_sql, [database])
 
-      if sql_result.empty?
-        describe 'There are no database schemas' do
-          skip 'There are no database schemas'
-        end
-      end
-
-      if !sql_result.empty?
-        describe.one do
-          describe sql_result do
-            its('output') { should eq '' }
-          end
-
-          describe sql_result do
-            it { should match connection_error_regex }
-          end
-        end
-      end
-
-      sql_result = sql.query(functions_sql, [database])
-
-      if sql_result.empty?
-        describe 'There are no database functions' do
-          skip 'There are no database functions'
-        end
-      end
-
-      if !sql_result.empty?
-
-        describe.one do
-          describe sql_result do
-            its('output') { should eq '' }
-          end
-
-          describe sql_result do
-            it { should match connection_error_regex }
-          end
-        end
-      end
-
-      types.each do |type|
-        objects_sql = ''
-
-        if database == 'postgres'
-          objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
-            "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
-            "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-            "WHERE c.relkind IN ('#{type}','s','') "\
-            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner') "
-            "AND n.nspname !~ '^pg_toast';"
-        else
-          objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
-            "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
-            "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-            "WHERE c.relkind IN ('#{type}','s','') "\
-            "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
-            "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-            "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
-            " AND n.nspname !~ '^pg_toast';"
+      describe.one do
+        describe sql_result do
+          its('output') { should eq '' }
         end
 
-        sql_result = sql.query(objects_sql, [database])
-
-        if sql_result.empty?
-          describe 'There are no database functions' do
-            skip 'There are no database functions'
-          end
-        end
-
-        if !sql_result.empty?
-
-          describe.one do
-            describe sql_result do
-              its('output') { should eq '' }
-            end
-
-            describe sql_result do
-              it { should match connection_error_regex }
-            end
-          end
+        describe sql_result do
+          it { should match connection_error_regex }
         end
       end
     end
   end
+end
 
   control "V-72891" do
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
@@ -439,164 +415,141 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72897" do
-  title "Database objects (including but not limited to tables, indexes,
-  storage, trigger procedures, functions, links to software external to
-  PostgreSQL, etc.) must be owned by database/DBMS principals authorized for
-  ownership."
-  desc  "Within the database, object ownership implies full privileges to the
-  owned object, including the privilege to assign access to the owned objects
-  to other subjects. Database functions and procedures can be coded using
-  definer's rights. This allows anyone who utilizes the object to perform the
-  actions if they were the owner. If not properly managed, this can lead to
-  privileged actions being taken by unauthorized individuals.
-  Conversely, if critical tables or other objects rely on unauthorized owner
-  accounts, these objects may be lost when an account is removed."
-  impact 0.5
-  tag "severity": "medium"
-  tag "gtitle": "SRG-APP-000133-DB-000200"
-  tag "gid": "V-72897"
-  tag "rid": "SV-87549r1_rule"
-  tag "stig_id": "PGS9-00-003100"
-  tag "cci": ["CCI-001499"]
-  tag "nist": ["CM-5 (6)", "Rev_4"]
-  tag "check": "Review system documentation to identify accounts authorized to
-  own database objects. Review accounts that own objects in the database(s).
-  If any database objects are found to be owned by users not authorized to own
-  database objects, this is a finding.
-  To check the ownership of objects in the database, as the database
-  administrator, run the following SQL:
-  $ sudo su - postgres
-  $ psql -x -c \"\\dn *.*\"
-  $ psql -x -c \"\\dt *.*\"
-  $ psql -x -c \"\\ds *.*\"
-  $ psql -x -c \"\\dv *.*\"
-  $ psql -x -c \"\\df+ *.*\"
-  If any object is not owned by an authorized role for ownership, this is a
-  finding."
-  tag "fix": "Assign ownership of authorized objects to authorized object owner
-  accounts.
-  #### Schema Owner
-  To create a schema owned by the user bob, run the following SQL:
-  $ sudo su - postgres
-  $ psql -c \"CREATE SCHEMA test AUTHORIZATION bob
-  To alter the ownership of an existing object to be owned by the user bob,
-  run the following SQL:
-  $ sudo su - postgres
-  $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
+    title "Database objects (including but not limited to tables, indexes,
+    storage, trigger procedures, functions, links to software external to
+    PostgreSQL, etc.) must be owned by database/DBMS principals authorized for
+    ownership."
+    desc  "Within the database, object ownership implies full privileges to the
+    owned object, including the privilege to assign access to the owned objects
+    to other subjects. Database functions and procedures can be coded using
+    definer's rights. This allows anyone who utilizes the object to perform the
+    actions if they were the owner. If not properly managed, this can lead to
+    privileged actions being taken by unauthorized individuals.
+    Conversely, if critical tables or other objects rely on unauthorized owner
+    accounts, these objects may be lost when an account is removed."
+    impact 0.5
+    tag "severity": "medium"
+    tag "gtitle": "SRG-APP-000133-DB-000200"
+    tag "gid": "V-72897"
+    tag "rid": "SV-87549r1_rule"
+    tag "stig_id": "PGS9-00-003100"
+    tag "cci": ["CCI-001499"]
+    tag "nist": ["CM-5 (6)", "Rev_4"]
+    tag "check": "Review system documentation to identify accounts authorized to
+    own database objects. Review accounts that own objects in the database(s).
+    If any database objects are found to be owned by users not authorized to own
+    database objects, this is a finding.
+    To check the ownership of objects in the database, as the database
+    administrator, run the following SQL:
+    $ sudo su - postgres
+    $ psql -x -c \"\\dn *.*\"
+    $ psql -x -c \"\\dt *.*\"
+    $ psql -x -c \"\\ds *.*\"
+    $ psql -x -c \"\\dv *.*\"
+    $ psql -x -c \"\\df+ *.*\"
+    If any object is not owned by an authorized role for ownership, this is a
+    finding."
+    tag "fix": "Assign ownership of authorized objects to authorized object owner
+    accounts.
+    #### Schema Owner
+    To create a schema owned by the user bob, run the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"CREATE SCHEMA test AUTHORIZATION bob
+    To alter the ownership of an existing object to be owned by the user bob,
+    run the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
 
-  sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    authorized_owners = attribute('pg_superusers')
+    PG_DB = attribute('pg_db')
+    PG_OWNER = attribute('pg_owner')
 
-  authorized_owners = attrribute('pg_superusers')
 
+    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
+    databases_query = sql.query(databases_sql, [PG_DB])
+    databases = databases_query.lines
+    types = %w(t s v) # tables, sequences views
 
-  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = 'attribute('pg_db')';"
-  databases_query = sql.query(databases_sql, [attribute('pg_db')])
-  databases = databases_query.lines
-  types = %w(t s v) # tables, sequences views
-
-  databases.each do |database|
-    schemas_sql = ''
-    functions_sql = ''
-
-    if database == 'postgres'
-      schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "FROM pg_catalog.pg_namespace n "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
-      functions_sql = "SELECT n.nspname, p.proname, "\
-        "pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "FROM pg_catalog.pg_proc p "\
-        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
-    else
-      schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "FROM pg_catalog.pg_namespace n "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-        "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
-      functions_sql = "SELECT n.nspname, p.proname, "\
-        "pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "FROM pg_catalog.pg_proc p "\
-        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-        "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
-    end
-
-    connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
-      "accepting connections"
-    connection_error_regex = Regexp.new(connection_error)
-
-    sql_result=sql.query(schemas_sql, [database])
-
-    if sql_result.empty?
-      describe 'There are no database schemas' do
-        skip 'There are no database schemas'
-      end
-    end
-
-    if !sql_result.empty?
-      describe.one do
-        describe sql_result do
-          its('output') { should eq '' }
-        end
-
-        describe sql_result do
-          it { should match connection_error_regex }
-        end
-      end
-    end
-
-    sql_result=sql.query(functions_sql, [database])
-
-    if sql_result.empty?
-      describe 'There are no database functions' do
-        skip 'There are no database functions'
-      end
-    end
-
-    if !sql_result.empty?
-
-      describe.one do
-        describe sql_result do
-          its('output') { should eq '' }
-        end
-
-        describe sql_result do
-          it { should match connection_error_regex }
-        end
-      end
-    end
-
-    types.each do |type|
-      objects_sql = ''
+    databases.each do |database|
+      schemas_sql = ''
+      functions_sql = ''
 
       if database == 'postgres'
-        objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
-          "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
-          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-          "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')' "
-          "AND n.nspname !~ '^pg_toast';"
+        schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
+          "FROM pg_catalog.pg_namespace n "\
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+        functions_sql = "SELECT n.nspname, p.proname, "\
+          "pg_catalog.pg_get_userbyid(n.nspowner) "\
+          "FROM pg_catalog.pg_proc p "\
+          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
       else
-        objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
-          "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
-          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-          "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
+        schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
+          "FROM pg_catalog.pg_namespace n "\
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
           "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
-          "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
-          " AND n.nspname !~ '^pg_toast';"
+          "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
+        functions_sql = "SELECT n.nspname, p.proname, "\
+          "pg_catalog.pg_get_userbyid(n.nspowner) "\
+          "FROM pg_catalog.pg_proc p "\
+          "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
+          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+          "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
       end
 
-      sql_result=sql.query(objects_sql, [database])
+      connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
+        "accepting connections"
+      connection_error_regex = Regexp.new(connection_error)
 
-      if sql_result.empty?
-        describe 'There are no database schemas' do
-          skip 'There are no database schemas'
+      sql_result=sql.query(schemas_sql, [database])
+
+      describe.one do
+        describe sql_result do
+          its('output') { should eq '' }
+        end
+
+        describe sql_result do
+          it { should match connection_error_regex }
         end
       end
 
-      if !sql_result.empty?
+      sql_result=sql.query(functions_sql, [database])
+
+      describe.one do
+        describe sql_result do
+          its('output') { should eq '' }
+        end
+
+        describe sql_result do
+          it { should match connection_error_regex }
+        end
+      end
+
+      types.each do |type|
+        objects_sql = ''
+
+        if database == 'postgres'
+          objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
+            "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
+            "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+            "WHERE c.relkind IN ('#{type}','s','') "\
+            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+            "AND n.nspname !~ '^pg_toast';"
+        else
+          objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
+            "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
+            "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+            "WHERE c.relkind IN ('#{type}','s','') "\
+            "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
+            "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+            "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
+            " AND n.nspname !~ '^pg_toast';"
+        end
+
+        sql_result=sql.query(objects_sql, [database])
+
         describe.one do
           describe sql_result do
             its('output') { should eq '' }
@@ -609,7 +562,7 @@ include_controls 'pgstigcheck-inspec' do
       end
     end
   end
-end
+
 
   control "V-72899" do
     impact 0.0
@@ -771,23 +724,23 @@ end
   control "V-72999" do
 
     title "PostgreSQL must separate user functionality (including user interface
-    services) from database management functionality."
+  services) from database management functionality."
     desc  "Information system management functionality includes functions necessary to
-    administer databases, network components, workstations, or servers and typically
-    requires privileged user access.
-    The separation of user functionality from information system management
-    functionality is either physical or logical and is accomplished by using different
-    computers, different central processing units, different instances of the operating
-    system, different network addresses, combinations of these methods, or other
-    methods, as appropriate.
-    An example of this type of separation is observed in web administrative interfaces
-    that use separate authentication methods for users of any other information system
-    resources.
-    This may include isolating the administrative interface on a different domain and
-    with additional access controls.
-    If administrative functionality or information regarding PostgreSQL management is
-    presented on an interface available for users, information on DBMS settings may be
-    inadvertently made available to the user."
+  administer databases, network components, workstations, or servers and typically
+  requires privileged user access.
+  The separation of user functionality from information system management
+  functionality is either physical or logical and is accomplished by using different
+  computers, different central processing units, different instances of the operating
+  system, different network addresses, combinations of these methods, or other
+  methods, as appropriate.
+  An example of this type of separation is observed in web administrative interfaces
+  that use separate authentication methods for users of any other information system
+  resources.
+  This may include isolating the administrative interface on a different domain and
+  with additional access controls.
+  If administrative functionality or information regarding PostgreSQL management is
+  presented on an interface available for users, information on DBMS settings may be
+  inadvertently made available to the user."
 
     impact 0.5
     tag "severity": "medium"
@@ -799,46 +752,42 @@ end
     tag "nist": ["SC-2", "Rev_4"]
 
     tag "check": "Check PostgreSQL settings and vendor documentation to verify that
-    administrative functionality is separate from user functionality.
-    As the database administrator (shown here as \"postgres\"), list all roles and
-    permissions for the database:
-    $ sudo su - postgres
-    $ psql -c \"\\du\"
-    If any non-administrative role has the attribute \"Superuser\", \"Create role\",
-    \"Create DB\" or \"Bypass RLS\", this is a finding.
-    If administrator and general user functionality are not separated either physically
-    or logically, this is a finding."
+  administrative functionality is separate from user functionality.
+  As the database administrator (shown here as \"postgres\"), list all roles and
+  permissions for the database:
+  $ sudo su - postgres
+  $ psql -c \"\\du\"
+  If any non-administrative role has the attribute \"Superuser\", \"Create role\",
+  \"Create DB\" or \"Bypass RLS\", this is a finding.
+  If administrator and general user functionality are not separated either physically
+  or logically, this is a finding."
     tag "fix": "Configure PostgreSQL to separate database administration and general
-    user functionality.
-    Do not grant superuser, create role, create db or bypass rls role attributes to
-    users that do not require it.
-    To remove privileges, see the following example:
-    ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
+  user functionality.
+  Do not grant superuser, create role, create db or bypass rls role attributes to
+  users that do not require it.
+  To remove privileges, see the following example:
+  ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
 
-    privileges = %w(rolcreatedb rolcreaterole rolsuper)
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
+    PG_SUPERUSERS = attribute('pg_superusers')
+    PG_DB = attribute('pg_db')
+    PG_OWNER = attribute('pg_owner')
+
+    privileges = %w(rolcreatedb rolcreaterole rolsuper)
+    
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [attribute('pg_db')])
+    roles_query = sql.query(roles_sql, [PG_DB])
     roles = roles_query.lines
 
-    if roles.empty?
-      describe 'There are no database roles' do
-        skip 'There are no database roles'
-      end
-    end
+    roles.each do |role|
+      unless PG_SUPERUSERS.include?(role)
+        privileges.each do |privilege|
+          privilege_sql = "SELECT r.#{privilege} FROM pg_catalog.pg_roles r "\
+            "WHERE r.rolname = '#{role}';"
 
-    if !roles.empty?
-
-      roles.each do |role|
-        unless attritbute('pg_superusers').include?(role)
-          privileges.each do |privilege|
-            privilege_sql = "SELECT r.#{privilege} FROM pg_catalog.pg_roles r "\
-              "WHERE r.rolname = '#{role}';"
-
-            describe sql.query(privilege_sql, [attribute('pg_db')]) do
-              its('output') { should_not eq 't' }
-            end
+          describe sql.query(privilege_sql, [PG_DB]) do
+            its('output') { should_not eq 't' }
           end
         end
       end
@@ -860,6 +809,7 @@ end
     end
   end
 
+  
   control "V-73017" do
     title "PostgreSQL must enforce access restrictions associated with changes to the
     configuration of PostgreSQL or database(s)."
@@ -900,30 +850,26 @@ end
 
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
+    PG_SUPERUSERS = attribute('pg_superusers')
+    PG_DB = attribute('pg_db')
+    PG_OWNER = attribute('pg_owner')
+
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [attribute('pg_db')])
+    roles_query = sql.query(roles_sql, [PG_DB])
     roles = roles_query.lines
 
-    if roles.empty?
-      describe 'There are no database roles' do
-        skip 'There are no database roles'
-      end
-    end
+    roles.each do |role|
+      unless PG_SUPERUSERS.include?(role)
+        superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
+          "WHERE r.rolname = '#{role}';"
 
-    if !roles.empty?
-      roles.each do |role|
-        unless attritbute('pg_superusers').include?(role)
-          superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
-            "WHERE r.rolname = '#{role}';"
-
-          describe sql.query(superuser_sql, [attribute('pg_db')]) do
-            its('output') { should_not eq 't' }
-          end
+        describe sql.query(superuser_sql, [PG_DB]) do
+          its('output') { should_not eq 't' }
         end
       end
     end
 
-    authorized_owners = attribute('pg_superusers')
+    authorized_owners = PG_SUPERUSERS
     owners = authorized_owners.join('|')
 
     database_granted_privileges = 'CTc'
@@ -939,47 +885,31 @@ end
     schema_acl_regex = Regexp.new(schema_acl)
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [attribute('pg_db')])
+    databases_query = sql.query(databases_sql, [PG_DB])
     databases = databases_query.lines
 
-    if databases.empty?
-      describe 'There are no postgres databases' do
-        skip 'There are no postgres databases'
+    databases.each do |database|
+      datacl_sql = "SELECT pg_catalog.array_to_string(datacl, E','), datname "\
+        "FROM pg_catalog.pg_database WHERE datname = '#{database}';"
+
+      describe sql.query(datacl_sql, [PG_DB]) do
+        its('output') { should match database_acl_regex }
       end
-    end
 
-    if !databases.empty?
-      databases.each do |database|
-        datacl_sql = "SELECT pg_catalog.array_to_string(datacl, E','), datname "\
-          "FROM pg_catalog.pg_database WHERE datname = '#{database}';"
+      schemas_sql = "SELECT n.nspname, FROM pg_catalog.pg_namespace n "\
+        "WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
+      schemas_query = sql.query(schemas_query, [database])
+      # Handle connection disabled on database
+      if schemas_query.methods.include?(:output)
+        schemas = schemas_query.lines
 
-        describe sql.query(datacl_sql, [attribute('pg_db')]) do
-          its('output') { should match database_acl_regex }
-        end
+        schemas.each do |schema|
+          nspacl_sql = "SELECT pg_catalog.array_to_string(n.nspacl, E','), "\
+            "n.nspname FROM pg_catalog.pg_namespace n "\
+            "WHERE n.nspname = '#{schema}';"
 
-        schemas_sql = "SELECT n.nspname, FROM pg_catalog.pg_namespace n "\
-          "WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
-        schemas_query = sql.query(schemas_query, [database])
-        # Handle connection disabled on database
-        if schemas_query.methods.include?(:output)
-          schemas = schemas_query.lines
-
-            if schemas.empty?
-              describe 'There are no database schemas' do
-                skip 'There are no database schemas'
-              end
-            end
-
-            if !schemas.empty?
-            schemas.each do |schema|
-              nspacl_sql = "SELECT pg_catalog.array_to_string(n.nspacl, E','), "\
-                "n.nspname FROM pg_catalog.pg_namespace n "\
-                "WHERE n.nspname = '#{schema}';"
-
-              describe sql.query(nspacl_sql) do
-                its('output') { should match schema_acl_regex }
-              end
-            end
+          describe sql.query(nspacl_sql) do
+            its('output') { should match schema_acl_regex }
           end
         end
       end
@@ -1018,15 +948,77 @@ end
   end
 
   control "V-73049" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    title "PostgreSQL must uniquely identify and authenticate organizational users (or
+    processes acting on behalf of organizational users)."
+    desc  "To assure accountability and prevent unauthenticated access, organizational
+    users must be identified and authenticated to prevent potential misuse and
+    compromise of the system.
+    Organizational users include organizational employees or individuals the
+    organization deems to have cmpuivalent status of employees (e.g., contractors).
+    Organizational users (and any processes acting on behalf of users) must be uniquely
+    identified and authenticated for all accesses, except the following:
+    (i) Accesses explicitly identified and documented by the organization. Organizations
+    document specific user actions that can be performed on the information system
+    without identification or authentication; and
+    (ii) Accesses that occur through authorized use of group authenticators without
+    individual authentication. Organizations may rcmpuire unique identification of
+    individuals using shared accounts, for detailed accountability of individual
+    activity."
+    impact 0.5
+    tag "severity": "medium"
+    tag "gtitle": "SRG-APP-000148-DB-000103"
+    tag "gid": "V-73049"
+    tag "rid": "SV-87701r1_rule"
+    tag "stig_id": "PGS9-00-011500"
+    tag "cci": ["CCI-000764"]
+    tag "nist": ["IA-2", "Rev_4"]
+    tag "check": "Review PostgreSQL settings to determine whether organizational users
+    are uniquely identified and authenticated when logging on/connecting to the system.
+    To list all roles in the database, as the database administrator (shown here as
+    \"postgres\"), run the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"\\du\"
+    If organizational users are not uniquely identified and authenticated, this is a
+    finding.
+    Next, as the database administrator (shown here as \"postgres\"), verify the current
+    pg_hba.conf authentication settings:
+    $ sudo su - postgres
+    $ cat ${PGDATA?}/pg_hba.conf
+    If every role does not have unique authentication rcmpuirements, this is a finding.
+    If accounts are determined to be shared, determine if individuals are first
+    individually authenticated. If individuals are not individually authenticated before
+    using the shared account, this is a finding."
 
-    authorized_roles = attribute('pg_users')
+    tag "fix": "Note: The following instructions use the PGDATA environment variable.
+    See supplementary content APPENDIX-F for instructions on configuring PGDATA.
+    Configure PostgreSQL settings to uniquely identify and authenticate all
+    organizational users who log on/connect to the system.
+    To create roles, use the following SQL:
+    CREATE ROLE <role_name> [OPTIONS]
+    For more information on CREATE ROLE, see the official documentation:
+    https://www.postgresql.org/docs/current/static/sql-createrole.html
+    For each role created, the database administrator can specify database
+    authentication by editing pg_hba.conf:
+    $ sudo su - postgres
+    $ vi ${PGDATA?}/pg_hba.conf
+    An example pg_hba entry looks like this:
+    # TYPE DATABASE USER ADDRESS METHOD
+    host test_db bob 192.168.0.0/16 md5
+    For more information on pg_hba.conf, see the official documentation:
+    https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
+
+    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    PG_USERS = attribute('pg_users')
+    PG_DB = attribute('pg_db')
+
+    authorized_roles = PG_USERS
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
 
-    describe sql.query(roles_sql, [attribute('pg_db')]) do
-      its('lines.sort') { should cmp authorized_roles.sort }
+    describe sql.query(roles_sql, [PG_DB]) do
+      its('lines') { should cmp authorized_roles}
     end
+
   end
 
   control "V-73051" do
