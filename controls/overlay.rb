@@ -300,12 +300,12 @@ include_controls 'pgstigcheck-inspec' do
       if database == 'postgres'
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
         functions_sql = "SELECT n.nspname, p.proname, "\
           "pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_proc p "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
       else
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
@@ -374,7 +374,7 @@ include_controls 'pgstigcheck-inspec' do
             "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
             "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
             "WHERE c.relkind IN ('#{type}','s','') "\
-            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner') "
             "AND n.nspname !~ '^pg_toast';"
         else
           objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -501,12 +501,12 @@ include_controls 'pgstigcheck-inspec' do
     if database == 'postgres'
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
       functions_sql = "SELECT n.nspname, p.proname, "\
         "pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_proc p "\
         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')';"
     else
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
@@ -575,7 +575,7 @@ include_controls 'pgstigcheck-inspec' do
           "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
           "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'attribute('pg_owner')' "
           "AND n.nspname !~ '^pg_toast';"
       else
         objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -831,7 +831,7 @@ end
     if !roles.empty?
 
       roles.each do |role|
-        unless PG_SUPERUSERS.include?(role)
+        unless attritbute('pg_superusers').include?(role)
           privileges.each do |privilege|
             privilege_sql = "SELECT r.#{privilege} FROM pg_catalog.pg_roles r "\
               "WHERE r.rolname = '#{role}';"
@@ -912,7 +912,7 @@ end
 
     if !roles.empty?
       roles.each do |role|
-        unless PG_SUPERUSERS.include?(role)
+        unless attritbute('pg_superusers').include?(role)
           superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
             "WHERE r.rolname = '#{role}';"
 
