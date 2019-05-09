@@ -286,10 +286,10 @@ include_controls 'pgstigcheck-inspec' do
 
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
-    authorized_owners = PG_SUPERUSERS
+    authorized_owners = attribute('pg_superusers')
 
-    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
-    databases_query = sql.query(databases_sql, [PG_DB])
+    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = 'attribute('pg_db')';"
+    databases_query = sql.query(databases_sql, [attribute('pg_db')])
     databases = databases_query.lines
     types = %w(t s v) # tables, sequences views
 
@@ -486,11 +486,11 @@ include_controls 'pgstigcheck-inspec' do
 
   sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
-  authorized_owners = PG_SUPERUSERS
+  authorized_owners = attrribute('pg_superusers')
 
 
-  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
-  databases_query = sql.query(databases_sql, [PG_DB])
+  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = 'attribute('pg_db')';"
+  databases_query = sql.query(databases_sql, [attribute('pg_db')])
   databases = databases_query.lines
   types = %w(t s v) # tables, sequences views
 
@@ -695,8 +695,8 @@ end
       "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
       "JOIN pg_authid a ON a.oid = p.proowner WHERE prosecdef = 't';"
 
-    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
-    databases_query = sql.query(databases_sql, [PG_DB])
+    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '';"
+    databases_query = sql.query(databases_sql, [attribute('pg_db')])
     databases = databases_query.lines
 
     databases.each do |database|
@@ -819,7 +819,7 @@ end
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [PG_DB])
+    roles_query = sql.query(roles_sql, [attribute('pg_db')])
     roles = roles_query.lines
 
     if roles.empty?
@@ -836,7 +836,7 @@ end
             privilege_sql = "SELECT r.#{privilege} FROM pg_catalog.pg_roles r "\
               "WHERE r.rolname = '#{role}';"
 
-            describe sql.query(privilege_sql, [PG_DB]) do
+            describe sql.query(privilege_sql, [attribute('pg_db')]) do
               its('output') { should_not eq 't' }
             end
           end
@@ -901,7 +901,7 @@ end
     sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [PG_DB])
+    roles_query = sql.query(roles_sql, [attribute('pg_db')])
     roles = roles_query.lines
 
     if roles.empty?
@@ -916,14 +916,14 @@ end
           superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
             "WHERE r.rolname = '#{role}';"
 
-          describe sql.query(superuser_sql, [PG_DB]) do
+          describe sql.query(superuser_sql, [attribute('pg_db')]) do
             its('output') { should_not eq 't' }
           end
         end
       end
     end
 
-    authorized_owners = PG_SUPERUSERS
+    authorized_owners = attribute('pg_superusers')
     owners = authorized_owners.join('|')
 
     database_granted_privileges = 'CTc'
@@ -939,7 +939,7 @@ end
     schema_acl_regex = Regexp.new(schema_acl)
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [PG_DB])
+    databases_query = sql.query(databases_sql, [attribute('pg_db')])
     databases = databases_query.lines
 
     if databases.empty?
@@ -953,7 +953,7 @@ end
         datacl_sql = "SELECT pg_catalog.array_to_string(datacl, E','), datname "\
           "FROM pg_catalog.pg_database WHERE datname = '#{database}';"
 
-        describe sql.query(datacl_sql, [PG_DB]) do
+        describe sql.query(datacl_sql, [attribute('pg_db')]) do
           its('output') { should match database_acl_regex }
         end
 
