@@ -10,13 +10,13 @@ pg_owner: 'postgres'
 pg_group: 'postgres'
 pg_owner_password: ''
 
-pg_dba: 'root'
-pg_dba_password: 'password'
+pg_dba: 'postgres'
+pg_dba_password: 'postgres'
 
 pg_user: ''
 pg_user_password: ''
 
-pg_host: 'rds.cjwekmnpixnv.us-east-2.rds.amazonaws.com'
+pg_host: 'test.c6bqe8whcxdo.us-east-2.rds.amazonaws.com'
 pg_port: '5432'
 
 pg_db: 'test'
