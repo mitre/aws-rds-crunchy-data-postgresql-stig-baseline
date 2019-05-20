@@ -58,7 +58,7 @@ attributes:
   - name: pg_host
     description: 'Postgres database hostname'
     type: string
-    default: 'rds.cjwekmnpixnv.us-east-2.rds.amazonaws.com'
+    default: ''
 
   - name: pg_port
     description: 'Postgres database port'
