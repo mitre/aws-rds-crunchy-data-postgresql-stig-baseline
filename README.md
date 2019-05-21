@@ -3,7 +3,7 @@
 InSpec profile to validate the secure configuration of AWS RDS PostgreSQL 9.x Database, against [DISA](https://iase.disa.mil/stigs/)'s **PostgresSQL 9.x Security Technical Implementation Guide (STIG) Version 1, Release 1**.
 
 ## Getting Started  
-It is intended and recommended that InSpec run this profile from a __"runner"__ host (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop) against the target remotely over __winrm__.
+It is intended and recommended that InSpec run this profile from a __"runner"__ host (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop) against the target remotely over __ssh__.
 
 __For the best security of the runner, always install on the runner the _latest version_ of InSpec and supporting Ruby language components.__ 
 
@@ -11,13 +11,13 @@ Latest versions and installation options are available at the [InSpec](http://in
 
 ## Running This Profile
 
-    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t winrm://<hostip> --user '<admin-account>' --password=<password> --reporter cli json:<filename>.json
+    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t ssh://<hostip> --user '<admin-account>' --password=<password> --reporter cli json:<filename>.json
 
-Runs this profile over winrm to the host at IP address <hostip> as a privileged user account (i.e., an account with administrative privileges), reporting results to both the command line interface (cli) and to a machine-readable JSON file. 
+Runs this profile over ssh to the host at IP address <hostip> as a privileged user account (i.e., an account with administrative privileges), reporting results to both the command line interface (cli) and to a machine-readable JSON file. 
     
 The following is an example of using this command. 
 
-    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t winrm://$winhostip --user 'Administrator' --password=Pa55w0rd --reporter cli json:aws-rds-postgresql-stig-baseline-results.json
+    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t ssh://<hostip> --user '<admin-account>' --password=<password>  --reporter cli json:aws-rds-postgresql-stig-baseline-results.json
 
 ## Viewing the JSON Results
 
