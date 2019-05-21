@@ -11,13 +11,13 @@ Latest versions and installation options are available at the [InSpec](http://in
 
 ## Running This Profile
 
-    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t ssh://<hostip> --user '<admin-account>' --password=<password> --reporter cli json:<filename>.json
+    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz  --reporter cli json:<filename>.json
 
-Runs this profile over ssh to the host at IP address <hostip> as a privileged user account (i.e., an account with administrative privileges), reporting results to both the command line interface (cli) and to a machine-readable JSON file. 
+Runs this profile and reports the results to both the command line interface (cli) and to a machine-readable JSON file. 
     
 The following is an example of using this command. 
 
-    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz -t ssh://<hostip> --user '<admin-account>' --password=<password>  --reporter cli json:aws-rds-postgresql-stig-baseline-results.json
+    inspec exec https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/archive/master.tar.gz  --reporter cli json:aws-rds-postgresql-stig-baseline-results.json
 
 ## Viewing the JSON Results
 
