@@ -8,9 +8,12 @@ copyright_email: opensource@mitre.org
 summary: The AWS RDS PostgreSQL 9.x InSpec profile.
 license: Apache-2.0
 Description: An InSpec Compliance Profile. 
-version: 0.1.0
+
+version: 0.2.0
+
 supports:
-  platform: os
+  - platform: aws
+
 inspec_version: "~> 3.0"
 
 depends:
