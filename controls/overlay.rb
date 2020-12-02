@@ -100,10 +100,6 @@ include_controls 'pgstigcheck-inspec' do
         end
       end
     end
-    impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
-    end
   end
 
   control "V-72861" do
