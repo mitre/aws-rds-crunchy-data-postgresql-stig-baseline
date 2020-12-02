@@ -287,11 +287,11 @@ include_controls 'pgstigcheck-inspec' do
   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
   authorized_owners = input('pg_superusers')
-  PG_DB = input('pg_db')
-  PG_OWNER = input('pg_owner')
+  pg_db = input('pg_db')
+  pg_owner = input('pg_owner')
 
-  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
-  databases_query = sql.query(databases_sql, [PG_DB])
+  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
+  databases_query = sql.query(databases_sql, [pg_db])
   databases = databases_query.lines
   types = %w(t s v) # tables, sequences views
 
@@ -302,12 +302,12 @@ include_controls 'pgstigcheck-inspec' do
     if database == 'postgres'
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
       functions_sql = "SELECT n.nspname, p.proname, "\
         "pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_proc p "\
         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
     else
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
@@ -359,7 +359,7 @@ include_controls 'pgstigcheck-inspec' do
           "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
           "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "
           "AND n.nspname !~ '^pg_toast';"
       else
         objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -462,12 +462,12 @@ end
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
     authorized_owners = input('pg_superusers')
-    PG_DB = input('pg_db')
-    PG_OWNER = input('pg_owner')
+    pg_db = input('pg_db')
+    pg_owner = input('pg_owner')
 
 
-    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
-    databases_query = sql.query(databases_sql, [PG_DB])
+    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
+    databases_query = sql.query(databases_sql, [pg_db])
     databases = databases_query.lines
     types = %w(t s v) # tables, sequences views
 
@@ -478,12 +478,12 @@ end
       if database == 'postgres'
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
         functions_sql = "SELECT n.nspname, p.proname, "\
           "pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_proc p "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
       else
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
@@ -535,7 +535,7 @@ end
             "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
             "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
             "WHERE c.relkind IN ('#{type}','s','') "\
-            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{PG_OWNER}' "
+            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "
             "AND n.nspname !~ '^pg_toast';"
         else
           objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -770,23 +770,23 @@ end
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    PG_SUPERUSERS = input('pg_superusers')
-    PG_DB = input('pg_db')
-    PG_OWNER = input('pg_owner')
+    pg_superusers = input('pg_superusers')
+    pg_db = input('pg_db')
+    pg_owner = input('pg_owner')
 
     privileges = %w(rolcreatedb rolcreaterole rolsuper)
     
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [PG_DB])
+    roles_query = sql.query(roles_sql, [pg_db])
     roles = roles_query.lines
 
     roles.each do |role|
-      unless PG_SUPERUSERS.include?(role)
+      unless pg_superusers.include?(role)
         privileges.each do |privilege|
           privilege_sql = "SELECT r.#{privilege} FROM pg_catalog.pg_roles r "\
             "WHERE r.rolname = '#{role}';"
 
-          describe sql.query(privilege_sql, [PG_DB]) do
+          describe sql.query(privilege_sql, [pg_db]) do
             its('output') { should_not eq 't' }
           end
         end
@@ -850,26 +850,26 @@ end
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    PG_SUPERUSERS = input('pg_superusers')
-    PG_DB = input('pg_db')
-    PG_OWNER = input('pg_owner')
+    pg_superusers = input('pg_superusers')
+    pg_db = input('pg_db')
+    pg_owner = input('pg_owner')
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [PG_DB])
+    roles_query = sql.query(roles_sql, [pg_db])
     roles = roles_query.lines
 
     roles.each do |role|
-      unless PG_SUPERUSERS.include?(role)
+      unless pg_superusers.include?(role)
         superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
           "WHERE r.rolname = '#{role}';"
 
-        describe sql.query(superuser_sql, [PG_DB]) do
+        describe sql.query(superuser_sql, [pg_db]) do
           its('output') { should_not eq 't' }
         end
       end
     end
 
-    authorized_owners = PG_SUPERUSERS
+    authorized_owners = pg_superusers
     owners = authorized_owners.join('|')
 
     database_granted_privileges = 'CTc'
@@ -885,14 +885,14 @@ end
     schema_acl_regex = Regexp.new(schema_acl)
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [PG_DB])
+    databases_query = sql.query(databases_sql, [pg_db])
     databases = databases_query.lines
 
     databases.each do |database|
       datacl_sql = "SELECT pg_catalog.array_to_string(datacl, E','), datname "\
         "FROM pg_catalog.pg_database WHERE datname = '#{database}';"
 
-      describe sql.query(datacl_sql, [PG_DB]) do
+      describe sql.query(datacl_sql, [pg_db]) do
         its('output') { should match database_acl_regex }
       end
 
@@ -1008,14 +1008,14 @@ end
     https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
-    PG_USERS = input('pg_users')
-    PG_DB = input('pg_db')
+    pg_users = input('pg_users')
+    pg_db = input('pg_db')
 
-    authorized_roles = PG_USERS
+    authorized_roles = pg_users
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
 
-    describe sql.query(roles_sql, [PG_DB]) do
+    describe sql.query(roles_sql, [pg_db]) do
       its('lines') { should cmp authorized_roles}
     end
 
