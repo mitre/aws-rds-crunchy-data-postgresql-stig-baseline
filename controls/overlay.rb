@@ -5,10 +5,10 @@ include_controls 'pgstigcheck-inspec' do
 
   control "V-72841" do
 
-   sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    describe sql.query('SHOW port;', [attribute('pg_db')]) do
-      its('output') { should cmp attribute('pg_port') }
+    describe sql.query('SHOW port;', [input('pg_db')]) do
+      its('output') { should cmp input('pg_port') }
     end
 
   end
@@ -29,9 +29,9 @@ include_controls 'pgstigcheck-inspec' do
   end
   
   control "V-72851" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    describe sql.query('SHOW client_min_messages;', [attribute('pg_db')]) do
+    describe sql.query('SHOW client_min_messages;', [input('pg_db')]) do
     its('output') { should match /^error$/i }
     end
   end
@@ -44,24 +44,24 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72859" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [attribute('pg_db')])
+    roles_query = sql.query(roles_sql, [input('pg_db')])
     roles = roles_query.lines
 
     roles.each do |role|
-      unless attribute('pg_superusers').include?(role)
+      unless input('pg_superusers').include?(role)
         superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
           "WHERE r.rolname = '#{role}';"
 
-        describe sql.query(superuser_sql, [attribute('pg_db')]) do
+        describe sql.query(superuser_sql, [input('pg_db')]) do
           its('output') { should_not eq 't' }
         end
       end
     end
 
-    authorized_owners = attribute('pg_superusers')
+    authorized_owners = input('pg_superusers')
     owners = authorized_owners.join('|')
 
     object_granted_privileges = 'arwdDxtU'
@@ -77,7 +77,7 @@ include_controls 'pgstigcheck-inspec' do
       "AND n.nspname !~ '^pg_' AND pg_catalog.pg_table_is_visible(c.oid);"
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [attribute('pg_db')])
+    databases_query = sql.query(databases_sql, [input('pg_db')])
     databases = databases_query.lines
 
     databases.each do |database|
@@ -115,9 +115,9 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72865" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    authorized_owners = attribute('pg_superusers')
+    authorized_owners = input('pg_superusers')
     owners = authorized_owners.join('|')
 
     object_granted_privileges = 'arwdDxtU'
@@ -137,7 +137,7 @@ include_controls 'pgstigcheck-inspec' do
       "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f');"
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [attribute('pg_db')])
+    databases_query = sql.query(databases_sql, [input('pg_db')])
     databases = databases_query.lines
 
     databases.each do |database|
@@ -284,11 +284,11 @@ include_controls 'pgstigcheck-inspec' do
   $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
   $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
 
-  sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+  sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-  authorized_owners = attribute('pg_superusers')
-  PG_DB = attribute('pg_db')
-  PG_OWNER = attribute('pg_owner')
+  authorized_owners = input('pg_superusers')
+  PG_DB = input('pg_db')
+  PG_OWNER = input('pg_owner')
 
   databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
   databases_query = sql.query(databases_sql, [PG_DB])
@@ -388,18 +388,18 @@ include_controls 'pgstigcheck-inspec' do
 end
 
   control "V-72891" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [attribute('pg_db')])
+    roles_query = sql.query(roles_sql, [input('pg_db')])
     roles = roles_query.lines
 
     roles.each do |role|
-      unless attribute('pg_superusers').include?(role)
+      unless input('pg_superusers').include?(role)
         superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
           "WHERE r.rolname = '#{role}';"
 
-        describe sql.query(superuser_sql, [attribute('pg_db')]) do
+        describe sql.query(superuser_sql, [input('pg_db')]) do
           its('output') { should_not eq 't' }
         end
       end
@@ -460,10 +460,10 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
-    authorized_owners = attribute('pg_superusers')
-    PG_DB = attribute('pg_db')
-    PG_OWNER = attribute('pg_owner')
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    authorized_owners = input('pg_superusers')
+    PG_DB = input('pg_db')
+    PG_OWNER = input('pg_owner')
 
 
     databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{PG_DB}';"
@@ -642,14 +642,14 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER FUNCTION <function_name> SECURITY INVOKER;\""
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
     security_definer_sql = "SELECT nspname, proname, prosecdef "\
       "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
       "JOIN pg_authid a ON a.oid = p.proowner WHERE prosecdef = 't';"
 
     databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '';"
-    databases_query = sql.query(databases_sql, [attribute('pg_db')])
+    databases_query = sql.query(databases_sql, [input('pg_db')])
     databases = databases_query.lines
 
     databases.each do |database|
@@ -689,9 +689,9 @@ end
   end
 
   control "V-72979" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    ssl_crl_file_query = sql.query('SHOW ssl_crl_file;', [attribute('pg_db')])
+    ssl_crl_file_query = sql.query('SHOW ssl_crl_file;', [input('pg_db')])
 
     describe ssl_crl_file_query do
       its('output') { should match /^\w+\.crl$/ }
@@ -768,11 +768,11 @@ end
   To remove privileges, see the following example:
   ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    PG_SUPERUSERS = attribute('pg_superusers')
-    PG_DB = attribute('pg_db')
-    PG_OWNER = attribute('pg_owner')
+    PG_SUPERUSERS = input('pg_superusers')
+    PG_DB = input('pg_db')
+    PG_OWNER = input('pg_owner')
 
     privileges = %w(rolcreatedb rolcreaterole rolsuper)
     
@@ -848,11 +848,11 @@ end
     Use REVOKE to remove privileges from databases and schemas:
     $ psql -c \"REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;"
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
 
-    PG_SUPERUSERS = attribute('pg_superusers')
-    PG_DB = attribute('pg_db')
-    PG_OWNER = attribute('pg_owner')
+    PG_SUPERUSERS = input('pg_superusers')
+    PG_DB = input('pg_db')
+    PG_OWNER = input('pg_owner')
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [PG_DB])
@@ -940,9 +940,9 @@ end
   end
 
   control "V-73045" do
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
   
-    describe sql.query('SHOW log_destination;', [attribute('pg_db')]) do
+    describe sql.query('SHOW log_destination;', [input('pg_db')]) do
       its('output') { should match /syslog/i }
     end
   end
@@ -1007,9 +1007,9 @@ end
     For more information on pg_hba.conf, see the official documentation:
     https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
 
-    sql = postgres_session(attribute('pg_dba'), attribute('pg_dba_password'), attribute('pg_host'))
-    PG_USERS = attribute('pg_users')
-    PG_DB = attribute('pg_db')
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    PG_USERS = input('pg_users')
+    PG_DB = input('pg_db')
 
     authorized_roles = PG_USERS
 
