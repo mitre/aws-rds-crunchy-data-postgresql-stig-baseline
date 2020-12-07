@@ -5,10 +5,10 @@ include_controls 'pgstigcheck-inspec' do
 
   control "V-72841" do
 
-   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     describe sql.query('SHOW port;', [input('pg_db')]) do
-      its('output') { should cmp input('pg_port') }
+      its('output') { should eq input('pg_port') }
     end
 
   end
@@ -29,10 +29,10 @@ include_controls 'pgstigcheck-inspec' do
   end
   
   control "V-72851" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     describe sql.query('SHOW client_min_messages;', [input('pg_db')]) do
-    its('output') { should match /^error$/i }
+      its('output') { should match /^error$/i }
     end
   end
 
@@ -44,7 +44,7 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72859" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [input('pg_db')])
@@ -111,7 +111,7 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72865" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     authorized_owners = input('pg_superusers')
     owners = authorized_owners.join('|')
@@ -280,7 +280,7 @@ include_controls 'pgstigcheck-inspec' do
   $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
   $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
 
-  sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+  sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
   authorized_owners = input('pg_superusers')
   pg_db = input('pg_db')
@@ -384,7 +384,7 @@ include_controls 'pgstigcheck-inspec' do
 end
 
   control "V-72891" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [input('pg_db')])
@@ -456,7 +456,7 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('pg_superusers')
     pg_db = input('pg_db')
     pg_owner = input('pg_owner')
@@ -638,7 +638,7 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER FUNCTION <function_name> SECURITY INVOKER;\""
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     security_definer_sql = "SELECT nspname, proname, prosecdef "\
       "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
@@ -685,7 +685,7 @@ end
   end
 
   control "V-72979" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     ssl_crl_file_query = sql.query('SHOW ssl_crl_file;', [input('pg_db')])
 
@@ -764,7 +764,7 @@ end
   To remove privileges, see the following example:
   ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
     pg_db = input('pg_db')
@@ -844,7 +844,7 @@ end
     Use REVOKE to remove privileges from databases and schemas:
     $ psql -c \"REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
     pg_db = input('pg_db')
@@ -936,10 +936,10 @@ end
   end
 
   control "V-73045" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
   
     describe sql.query('SHOW log_destination;', [input('pg_db')]) do
-      its('output') { should match /syslog/i }
+      its('output') { should cmp 'syslog' }
     end
   end
 
@@ -1003,7 +1003,7 @@ end
     For more information on pg_hba.conf, see the official documentation:
     https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     pg_users = input('pg_users')
     pg_db = input('pg_db')
 
@@ -1012,7 +1012,7 @@ end
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
 
     describe sql.query(roles_sql, [pg_db]) do
-      its('lines') { should cmp authorized_roles}
+      its('lines.sort') { should cmp authorized_roles.sort}
     end
 
   end
