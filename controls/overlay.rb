@@ -13,6 +13,13 @@ include_controls 'pgstigcheck-inspec' do
 
   end
 
+  control "V-72843" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-72845" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
@@ -20,6 +27,12 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
+  control "V-72847" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
 
   control "V-72849" do
     impact 0.0
@@ -33,6 +46,20 @@ include_controls 'pgstigcheck-inspec' do
 
     describe sql.query('SHOW client_min_messages;', [input('pg_db')]) do
       its('output') { should match /^error$/i }
+    end
+  end
+
+  control "V-72853" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
+  control "V-72855" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
@@ -383,6 +410,20 @@ include_controls 'pgstigcheck-inspec' do
   end
 end
 
+control "V-72885" do
+  impact 0.0
+  describe 'Requires manual review of the RDS audit log system at this time.' do
+    skip 'Requires manual review of the RDS audit log system at this time.'
+  end
+end
+
+control "V-72889" do
+  impact 0.0
+  describe 'Requires manual review of the RDS audit log system at this time.' do
+    skip 'Requires manual review of the RDS audit log system at this time.'
+  end
+end
+
   control "V-72891" do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
@@ -677,10 +718,199 @@ end
     end
   end
 
+  control "V-72907" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72913" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72915" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-72917" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
+  control "V-72919" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72921" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72923" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72925" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72927" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72929" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72931" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72933" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72939" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72941" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72945" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72947" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72949" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72951" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72955" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72957" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72959" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72963" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72965" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72969" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72971" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72973" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72975" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72977" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
@@ -935,11 +1165,17 @@ end
     end
   end
 
+  control "V-73043" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
   control "V-73045" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
-  
-    describe sql.query('SHOW log_destination;', [input('pg_db')]) do
-      its('output') { should cmp 'syslog' }
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
@@ -1041,6 +1277,13 @@ end
     end
   end
 
+  control "V-73059" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
   control "V-73061" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
@@ -1055,8 +1298,23 @@ end
     end
   end
 
+  control "V-73065" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-73067" do
+    impact 0.0
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-73071" do
-      describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
