@@ -14,7 +14,6 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72843" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
@@ -28,7 +27,6 @@ include_controls 'pgstigcheck-inspec' do
   end
 
   control "V-72847" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
@@ -411,14 +409,12 @@ include_controls 'pgstigcheck-inspec' do
 end
 
 control "V-72885" do
-  impact 0.0
   describe 'Requires manual review of the RDS audit log system at this time.' do
     skip 'Requires manual review of the RDS audit log system at this time.'
   end
 end
 
 control "V-72889" do
-  impact 0.0
   describe 'Requires manual review of the RDS audit log system at this time.' do
     skip 'Requires manual review of the RDS audit log system at this time.'
   end
@@ -719,21 +715,18 @@ end
   end
 
   control "V-72907" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72913" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72915" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
@@ -747,168 +740,144 @@ end
   end
 
   control "V-72919" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72921" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72923" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72925" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72927" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72929" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72931" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72933" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72939" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72941" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72945" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72947" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72949" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72951" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72955" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72957" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72959" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72963" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72965" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72969" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72971" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72973" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72975" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-72977" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
@@ -1173,7 +1142,6 @@ end
   end
 
   control "V-73045" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
@@ -1299,14 +1267,12 @@ end
   end
 
   control "V-73065" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
   control "V-73067" do
-    impact 0.0
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
