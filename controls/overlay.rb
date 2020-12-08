@@ -68,12 +68,6 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
-  control "V-72859" do
-    describe 'Requires manual review at this time.' do
-      skip 'Requires manual review at this time.'
-    end
-  end
-
   control "V-72861" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
     having organization-defined security label values with information in transmission' do
@@ -81,13 +75,6 @@ include_controls 'pgstigcheck-inspec' do
     having organization-defined security label values with information in transmission'
   end
   end
-
-  control "V-72865" do
-    describe 'Requires manual review at this time.' do
-      skip 'Requires manual review at this time.'
-    end
-  end
-
 
   control "V-72869" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
