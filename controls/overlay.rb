@@ -5,12 +5,18 @@ include_controls 'pgstigcheck-inspec' do
 
   control "V-72841" do
 
-   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     describe sql.query('SHOW port;', [input('pg_db')]) do
-      its('output') { should cmp input('pg_port') }
+      its('output') { should eq input('pg_port') }
     end
 
+  end
+
+  control "V-72843" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
   end
 
   control "V-72845" do
@@ -20,6 +26,11 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
+  control "V-72847" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
 
   control "V-72849" do
     impact 0.0
@@ -29,10 +40,24 @@ include_controls 'pgstigcheck-inspec' do
   end
   
   control "V-72851" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     describe sql.query('SHOW client_min_messages;', [input('pg_db')]) do
-    its('output') { should match /^error$/i }
+      its('output') { should match /^error$/i }
+    end
+  end
+
+  control "V-72853" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
+  control "V-72855" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
@@ -43,65 +68,6 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
-  control "V-72859" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
-
-    roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
-    roles_query = sql.query(roles_sql, [input('pg_db')])
-    roles = roles_query.lines
-
-    roles.each do |role|
-      unless input('pg_superusers').include?(role)
-        superuser_sql = "SELECT r.rolsuper FROM pg_catalog.pg_roles r "\
-          "WHERE r.rolname = '#{role}';"
-
-        describe sql.query(superuser_sql, [input('pg_db')]) do
-          its('output') { should_not eq 't' }
-        end
-      end
-    end
-
-    authorized_owners = input('pg_superusers')
-    owners = authorized_owners.join('|')
-
-    object_granted_privileges = 'arwdDxtU'
-    object_public_privileges = 'r'
-    object_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
-      "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
-    object_acl_regex = Regexp.new(object_acl)
-
-    objects_sql = "SELECT n.nspname, c.relname, c.relkind "\
-      "FROM pg_catalog.pg_class c "\
-      "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-      "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f') "\
-      "AND n.nspname !~ '^pg_' AND pg_catalog.pg_table_is_visible(c.oid);"
-
-    databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [input('pg_db')])
-    databases = databases_query.lines
-
-    databases.each do |database|
-      rows = sql.query(objects_sql, [database])
-      if rows.methods.include?(:output) # Handle connection disabled on database
-        objects = rows.lines
-
-        objects.each do |obj|
-          schema, object, type = obj.split('|')
-          relacl_sql = "SELECT pg_catalog.array_to_string(c.relacl, E','), "\
-            "n.nspname, c.relname, c.relkind FROM pg_catalog.pg_class c "\
-            "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-            "WHERE n.nspname = '#{schema}' AND c.relname = '#{object}' "\
-            "AND c.relkind = '#{type}';"
-
-          describe sql.query(relacl_sql, [database]) do
-            its('output') { should match object_acl_regex }
-          end
-          # TODO: Add test for column acl
-        end
-      end
-    end
-  end
-
   control "V-72861" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
     having organization-defined security label values with information in transmission' do
@@ -109,66 +75,6 @@ include_controls 'pgstigcheck-inspec' do
     having organization-defined security label values with information in transmission'
   end
   end
-
-  control "V-72865" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
-
-    authorized_owners = input('pg_superusers')
-    owners = authorized_owners.join('|')
-
-    object_granted_privileges = 'arwdDxtU'
-    object_public_privileges = 'r'
-    object_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
-      "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
-    object_acl_regex = Regexp.new(object_acl)
-
-    pg_settings_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
-      "=rw)\/\\w+,?)+)\\|pg_catalog\\|pg_settings\\|v"
-    pg_settings_acl_regex = Regexp.new(pg_settings_acl)
-
-    tested = []
-    objects_sql = "SELECT n.nspname, c.relname, c.relkind "\
-      "FROM pg_catalog.pg_class c "\
-      "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-      "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f');"
-
-    databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
-    databases_query = sql.query(databases_sql, [input('pg_db')])
-    databases = databases_query.lines
-
-    databases.each do |database|
-      rows = sql.query(objects_sql, [database])
-      if rows.methods.include?(:output) # Handle connection disabled on database
-        objects = rows.lines
-
-        objects.each do |obj|
-          unless tested.include?(obj)
-            schema, object, type = obj.split('|')
-            relacl_sql = "SELECT pg_catalog.array_to_string(c.relacl, E','), "\
-              "n.nspname, c.relname, c.relkind FROM pg_catalog.pg_class c "\
-              "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
-              "WHERE n.nspname = '#{schema}' AND c.relname = '#{object}' "\
-              "AND c.relkind = '#{type}';"
-
-            sql_result=sql.query(relacl_sql, [database])
-
-            describe.one do
-              describe sql_result do
-                its('output') { should match object_acl_regex }
-              end
-
-              describe sql_result do
-                its('output') { should match pg_settings_acl_regex }
-              end
-            end
-            # TODO: Add test for column acl
-            tested.push(obj)
-          end
-        end
-      end
-    end
-  end
-
 
   control "V-72869" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
@@ -280,7 +186,7 @@ include_controls 'pgstigcheck-inspec' do
   $ psql -c \"REVOKE SELECT ON TABLE test.test_table FROM bob\"
   $ psql -c \"REVOKE CREATE ON SCHEMA test FROM bob\""
 
-  sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+  sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
   authorized_owners = input('pg_superusers')
   pg_db = input('pg_db')
@@ -383,8 +289,20 @@ include_controls 'pgstigcheck-inspec' do
   end
 end
 
+control "V-72885" do
+  describe 'Requires manual review of the RDS audit log system at this time.' do
+    skip 'Requires manual review of the RDS audit log system at this time.'
+  end
+end
+
+control "V-72889" do
+  describe 'Requires manual review of the RDS audit log system at this time.' do
+    skip 'Requires manual review of the RDS audit log system at this time.'
+  end
+end
+
   control "V-72891" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [input('pg_db')])
@@ -456,7 +374,7 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('pg_superusers')
     pg_db = input('pg_db')
     pg_owner = input('pg_owner')
@@ -638,7 +556,7 @@ end
     $ sudo su - postgres
     $ psql -c \"ALTER FUNCTION <function_name> SECURITY INVOKER;\""
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     security_definer_sql = "SELECT nspname, proname, prosecdef "\
       "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
@@ -677,6 +595,24 @@ end
     end
   end
 
+  control "V-72907" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72913" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72915" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-72917" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
@@ -684,8 +620,152 @@ end
     end
   end
 
+  control "V-72919" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72921" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72923" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72925" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72927" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72929" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72931" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72933" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72939" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72941" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72945" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72947" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72949" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72951" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72955" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72957" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72959" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72963" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72965" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72969" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72971" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72973" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72975" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-72977" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-72979" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     ssl_crl_file_query = sql.query('SHOW ssl_crl_file;', [input('pg_db')])
 
@@ -764,7 +844,7 @@ end
   To remove privileges, see the following example:
   ALTER ROLE <username> NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
     pg_db = input('pg_db')
@@ -787,6 +867,13 @@ end
           end
         end
       end
+    end
+  end
+
+  control "V-73009" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
@@ -844,7 +931,7 @@ end
     Use REVOKE to remove privileges from databases and schemas:
     $ psql -c \"REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
     pg_db = input('pg_db')
@@ -935,11 +1022,22 @@ end
     end
   end
 
+  control "V-73039" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-73043" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
   control "V-73045" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
-  
-    describe sql.query('SHOW log_destination;', [input('pg_db')]) do
-      its('output') { should match /syslog/i }
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
@@ -1003,7 +1101,7 @@ end
     For more information on pg_hba.conf, see the official documentation:
     https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
 
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     pg_users = input('pg_users')
     pg_db = input('pg_db')
 
@@ -1012,7 +1110,7 @@ end
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
 
     describe sql.query(roles_sql, [pg_db]) do
-      its('lines') { should cmp authorized_roles}
+      its('lines.sort') { should cmp authorized_roles.sort}
     end
 
   end
@@ -1041,6 +1139,13 @@ end
     end
   end
 
+  control "V-73059" do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    end
+  end
+
   control "V-73061" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
@@ -1055,8 +1160,21 @@ end
     end
   end
 
+  control "V-73065" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-73067" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
   control "V-73071" do
-      describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
