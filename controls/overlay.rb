@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-
 include_controls 'pgstigcheck-inspec' do
 
   control "V-72841" do
@@ -71,9 +70,72 @@ include_controls 'pgstigcheck-inspec' do
   control "V-72861" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
     having organization-defined security label values with information in transmission' do
-    skip 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
-    having organization-defined security label values with information in transmission'
+      skip 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
+      having organization-defined security label values with information in transmission'
+    end
   end
+
+  control 'V-27865' do
+    if !input('windows_runner')
+      sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
+      authorized_owners = input('pg_superusers')
+      owners = authorized_owners.join('|')
+  
+      object_granted_privileges = 'arwdDxtU'
+      object_public_privileges = 'r'
+      object_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
+        "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
+      object_acl_regex = Regexp.new(object_acl)
+  
+      pg_settings_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
+        "=rw)\/\\w+,?)+)\\|pg_catalog\\|pg_settings\\|v"
+      pg_settings_acl_regex = Regexp.new(pg_settings_acl)
+  
+      tested = []
+      objects_sql = "SELECT n.nspname, c.relname, c.relkind "\
+        "FROM pg_catalog.pg_class c "\
+        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+        "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f');"
+  
+      databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
+      databases_query = sql.query(databases_sql, [input('pg_db')])
+      databases = databases_query.lines
+  
+      databases.each do |database|
+        rows = sql.query(objects_sql, [database])
+        if rows.methods.include?(:output) # Handle connection disabled on database
+          objects = rows.lines
+  
+          objects.each do |obj|
+            unless tested.include?(obj)
+              schema, object, type = obj.split('|')
+              relacl_sql = "SELECT pg_catalog.array_to_string(c.relacl, E','), "\
+                "n.nspname, c.relname, c.relkind FROM pg_catalog.pg_class c "\
+                "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+                "WHERE n.nspname = '#{schema}' AND c.relname = '#{object}' "\
+                "AND c.relkind = '#{type}';"
+  
+              sql_result=sql.query(relacl_sql, [database])
+  
+              describe.one do
+                describe sql_result do
+                  its('output') { should match object_acl_regex }
+                end
+  
+                describe sql_result do
+                  its('output') { should match pg_settings_acl_regex }
+                end
+              end
+              tested.push(obj)
+            end
+          end
+        end
+      end
+    else
+      describe 'This must be manually reviewed at this time' do
+        skip 'This must be manually reveiwed at this time'
+      end
+    end
   end
 
   control "V-72869" do
