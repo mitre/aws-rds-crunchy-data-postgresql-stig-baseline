@@ -75,7 +75,7 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
-  control 'V-27865' do
+  control 'V-72865' do
     if !input('windows_runner')
       sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
       authorized_owners = input('pg_superusers')
