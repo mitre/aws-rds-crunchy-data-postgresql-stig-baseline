@@ -17,4 +17,11 @@ depends:
 
 - name: pgstigcheck-inspec
   url: https://github.com/mitre/pgstigcheck-inspec/archive/master.tar.gz
+  
+  
+- name: pg_superusers
+  description: "Authorized superuser accounts"
+  type: array
+  value: ['postgres', 'rdsadmin']
+  profile: pgstigcheck-inspec
 
