@@ -85,7 +85,7 @@ include_controls 'pgstigcheck-inspec' do
       superuser_sql = 'SELECT r.rolsuper FROM pg_catalog.pg_roles r '\
         "WHERE r.rolname = '#{role}';"
 
-      describe sql.query(superuser_sql, [pg_db]) do
+      describe sql.query(superuser_sql, [input('pg_db')]) do
         its('output') { should_not eq 't' }
       end
     end
@@ -106,7 +106,7 @@ include_controls 'pgstigcheck-inspec' do
       "AND n.nspname !~ '^pg_' AND pg_catalog.pg_table_is_visible(c.oid);"
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate AND datname != \'rdsadmin\';'
-    databases_query = sql.query(databases_sql, [pg_db])
+    databases_query = sql.query(databases_sql, [input('pg_db')])
     databases = databases_query.lines
 
     databases.each do |database|
