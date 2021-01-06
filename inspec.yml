@@ -22,6 +22,8 @@ depends:
 - name: pg_superusers
   description: "Authorized superuser accounts"
   type: array
-  value: ['postgres', 'rdsadmin']
+  value:
+    - "postgres"
+    - "rdsadmin"
   profile: pgstigcheck-inspec
 
