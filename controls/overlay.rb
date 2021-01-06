@@ -75,7 +75,7 @@ include_controls 'pgstigcheck-inspec' do
   else
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
+    roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r AND r.rolname != \'rdsadmin\';'
     roles_query = sql.query(roles_sql, [input('pg_db')])
     roles = roles_query.lines
 
