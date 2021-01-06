@@ -97,7 +97,7 @@ include_controls 'pgstigcheck-inspec' do
         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
         "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f');"
   
-      databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
+      databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate AND datname != \'rdsadmin\';'
       databases_query = sql.query(databases_sql, [input('pg_db')])
       databases = databases_query.lines
   
