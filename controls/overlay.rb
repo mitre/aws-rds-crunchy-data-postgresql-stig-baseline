@@ -261,7 +261,7 @@ end
     if database == 'postgres'
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin';"
       functions_sql = "SELECT n.nspname, p.proname, "\
         "pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_proc p "\
