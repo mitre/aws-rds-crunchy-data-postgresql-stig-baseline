@@ -271,14 +271,14 @@ end
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
         "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
         "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
       functions_sql = "SELECT n.nspname, p.proname, "\
         "pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_proc p "\
         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
         "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+        "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
         "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
     end
 
@@ -318,7 +318,7 @@ end
           "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
           "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "\
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
           " AND n.nspname !~ '^pg_toast';"
       else
         objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -326,7 +326,7 @@ end
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
           "WHERE c.relkind IN ('#{type}','s','') "\
           "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
           "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
           " AND n.nspname !~ '^pg_toast';"
       end
