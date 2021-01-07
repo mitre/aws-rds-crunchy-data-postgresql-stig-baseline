@@ -7,7 +7,7 @@ summary: The AWS RDS PostgreSQL 9.x InSpec profile.
 license: Apache-2.0
 Description: An InSpec Compliance Profile. 
 
-version: 1.6.11
+version: 1.6.12
 
 inspec_version: ">= 4.0"
 
@@ -23,8 +23,8 @@ inputs:
    - "rdsadmin"
   profile: pgstigcheck-inspec
 
-# - name: pg_owner
-#   description: "The system user of the postgres process"
-#   type: string
-#   value: "rdsadmin"
-#   profile: pgstigcheck-inspec
+- name: pg_owner
+  description: "The system user of the postgres process"
+  type: string
+  value: "rdsadmin"
+  profile: pgstigcheck-inspec
