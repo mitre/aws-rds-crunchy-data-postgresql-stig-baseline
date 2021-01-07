@@ -613,6 +613,47 @@ end
     end
   end
 
+  control "V-72911" do
+pg_owner = input('pg_owner')
+pg_dba = input('pg_dba')
+pg_dba_password = input('pg_dba_password')
+pg_db = input('pg_db')
+pg_host = input('pg_host')
+pg_object_granted_privileges = input('pg_object_granted_privileges')
+pg_object_public_privileges = input('pg_object_public_privileges')
+pg_object_exceptions = input('pg_object_exceptions')
+  exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
+  object_acl = "^(((#{pg_owner}=[#{pg_object_granted_privileges}]+|"\
+    "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
+  schemas = ['pg_catalog', 'information_schema']
+  sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+  schemas.each do |schema|
+    objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
+      "pg_catalog.array_to_string(c.relacl, E',') FROM pg_catalog.pg_class c "\
+      "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
+      "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f') "\
+      "AND n.nspname ~ '^(#{schema})$' "\
+      "AND pg_catalog.array_to_string(c.relacl, E',') !~ '#{object_acl}' "\
+      "AND c.relname NOT IN (#{exceptions});"
+
+    describe sql.query(objects_sql, [pg_db]) do
+      its('output') { should eq '' }
+    end
+
+    functions_sql = "SELECT n.nspname, p.proname, "\
+      "pg_catalog.pg_get_userbyid(n.nspowner) "\
+      "FROM pg_catalog.pg_proc p "\
+      "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
+      "WHERE n.nspname ~ '^(#{schema})$' "\
+      "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin';"
+
+    describe sql.query(functions_sql, [pg_db]) do
+      its('output') { should eq '' }
+    end
+  end
+end
+
   control "V-72913" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
