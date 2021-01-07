@@ -7,7 +7,7 @@ summary: The AWS RDS PostgreSQL 9.x InSpec profile.
 license: Apache-2.0
 Description: An InSpec Compliance Profile. 
 
-version: 1.6.8
+version: 1.6.9
 
 inspec_version: ">= 4.0"
 
@@ -23,6 +23,12 @@ inputs:
    - "rdsadmin"
   profile: pgstigcheck-inspec
 
+- name: pg_max_connections
+  description: "The maximum allowed number of connections to the postgres instance at any one time."
+  type: integer
+  value: 100
+  profile: pgstigcheck-inspec
+  
 # - name: pg_owner
 #   description: "The system user of the postgres process"
 #   type: string
