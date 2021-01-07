@@ -25,7 +25,7 @@ inputs:
 
 - name: pg_max_connections
   description: "The maximum allowed number of connections to the postgres instance at any one time."
-  type: integer
+  type: numeric
   value: 100
   profile: pgstigcheck-inspec
   
