@@ -386,51 +386,6 @@ end
   end
 
   control "V-72897" do
-    title "Database objects (including but not limited to tables, indexes,
-    storage, trigger procedures, functions, links to software external to
-    PostgreSQL, etc.) must be owned by database/DBMS principals authorized for
-    ownership."
-    desc  "Within the database, object ownership implies full privileges to the
-    owned object, including the privilege to assign access to the owned objects
-    to other subjects. Database functions and procedures can be coded using
-    definer's rights. This allows anyone who utilizes the object to perform the
-    actions if they were the owner. If not properly managed, this can lead to
-    privileged actions being taken by unauthorized individuals.
-    Conversely, if critical tables or other objects rely on unauthorized owner
-    accounts, these objects may be lost when an account is removed."
-    impact 0.5
-    tag "severity": "medium"
-    tag "gtitle": "SRG-APP-000133-DB-000200"
-    tag "gid": "V-72897"
-    tag "rid": "SV-87549r1_rule"
-    tag "stig_id": "PGS9-00-003100"
-    tag "cci": ["CCI-001499"]
-    tag "nist": ["CM-5 (6)", "Rev_4"]
-    tag "check": "Review system documentation to identify accounts authorized to
-    own database objects. Review accounts that own objects in the database(s).
-    If any database objects are found to be owned by users not authorized to own
-    database objects, this is a finding.
-    To check the ownership of objects in the database, as the database
-    administrator, run the following SQL:
-    $ sudo su - postgres
-    $ psql -x -c \"\\dn *.*\"
-    $ psql -x -c \"\\dt *.*\"
-    $ psql -x -c \"\\ds *.*\"
-    $ psql -x -c \"\\dv *.*\"
-    $ psql -x -c \"\\df+ *.*\"
-    If any object is not owned by an authorized role for ownership, this is a
-    finding."
-    tag "fix": "Assign ownership of authorized objects to authorized object owner
-    accounts.
-    #### Schema Owner
-    To create a schema owned by the user bob, run the following SQL:
-    $ sudo su - postgres
-    $ psql -c \"CREATE SCHEMA test AUTHORIZATION bob
-    To alter the ownership of an existing object to be owned by the user bob,
-    run the following SQL:
-    $ sudo su - postgres
-    $ psql -c \"ALTER SCHEMA test OWNER TO bob\""
-
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('pg_superusers')
     pg_db = input('pg_db')
@@ -449,24 +404,24 @@ end
       if database == 'postgres'
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin';"
         functions_sql = "SELECT n.nspname, p.proname, "\
           "pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_proc p "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
+          "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin';"
       else
         schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_namespace n "\
           "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
           "AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
         functions_sql = "SELECT n.nspname, p.proname, "\
           "pg_catalog.pg_get_userbyid(n.nspowner) "\
           "FROM pg_catalog.pg_proc p "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
           "WHERE pg_catalog.pg_get_userbyid(n.nspowner) "\
-          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+          "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
           "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema';"
       end
 
@@ -506,7 +461,7 @@ end
             "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
             "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
             "WHERE c.relkind IN ('#{type}','s','') "\
-            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "
+            "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "
             "AND n.nspname !~ '^pg_toast';"
         else
           objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
@@ -514,7 +469,7 @@ end
             "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
             "WHERE c.relkind IN ('#{type}','s','') "\
             "AND pg_catalog.pg_get_userbyid(n.nspowner) "\
-            "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) "\
+            "NOT IN (#{authorized_owners.map { |e| "'#{e}'" }.join(',')}) AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin' "\
             "AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema'"\
             " AND n.nspname !~ '^pg_toast';"
         end
