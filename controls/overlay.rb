@@ -266,7 +266,7 @@ end
         "pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_proc p "\
         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace "\
-        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}';"
+        "WHERE pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' AND pg_catalog.pg_get_userbyid(n.nspowner) <> 'rdsadmin';"
     else
       schemas_sql = "SELECT n.nspname, pg_catalog.pg_get_userbyid(n.nspowner) "\
         "FROM pg_catalog.pg_namespace n "\
@@ -318,8 +318,8 @@ end
           "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
           "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
           "WHERE c.relkind IN ('#{type}','s','') "\
-          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "
-          "AND n.nspname !~ '^pg_toast';"
+          "AND pg_catalog.pg_get_userbyid(n.nspowner) <> '#{pg_owner}' "\
+          " AND n.nspname !~ '^pg_toast';"
       else
         objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
           "pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c "\
