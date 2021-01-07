@@ -28,7 +28,7 @@ inputs:
   type: array
   value:
    - "postgres"
-  profile: aws-rds-crunchy-data-postgresql-9-stig-baseline
+  profile: pgstigcheck-inspec
 
 #- name: pg_owner
 #  description: "The system user of the postgres process"
