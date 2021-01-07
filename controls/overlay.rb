@@ -623,7 +623,7 @@ pg_object_granted_privileges = input('pg_object_granted_privileges')
 pg_object_public_privileges = input('pg_object_public_privileges')
 pg_object_exceptions = input('pg_object_exceptions')
   exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
-  object_acl = "^(((#{pg_owner}=[#{pg_object_granted_privileges}]+|"\
+  object_acl = "^(((#{pg_owner}|rdsadmin=[#{pg_object_granted_privileges}]+|"\
     "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
   schemas = ['pg_catalog', 'information_schema']
   sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
