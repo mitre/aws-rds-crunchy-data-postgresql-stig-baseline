@@ -515,27 +515,6 @@ end
   end
 
   control "V-72905" do
-    tag "check": "Functions in PostgreSQL can be created with the SECURITY
-    DEFINER option. When SECURITY DEFINER functions are executed by a user, said
-    function is run with the privileges of the user who created it.
-    To list all functions that have SECURITY DEFINER, as, the database
-    administrator (shown here as \"postgres\"), run the following SQL 
-    (Note on AWS RDS, pg_authid is not available but pg_roles is. 
-     pg_roles masks passwords and does not reveal encryption state):
-    $ sudo su - postgres
-    $ psql -c \"SELECT nspname, proname, proargtypes, prosecdef, rolname,
-    proconfig FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN
-    pg_roles a ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL;\"
-    In the query results, a prosecdef value of \"t\" on a row indicates that that
-    function uses privilege elevation.
-    If elevation of PostgreSQL privileges is utilized but not documented, this is
-    a finding.
-    If elevation of PostgreSQL privileges is documented, but not implemented as
-    described in the documentation, this is a finding.
-    If the privilege-elevation logic can be invoked in ways other than intended,
-    or in contexts other than intended, or by subjects/principals other than
-    intended, this is a finding."
-
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     security_definer_sql = "SELECT nspname, proname, prosecdef "\
