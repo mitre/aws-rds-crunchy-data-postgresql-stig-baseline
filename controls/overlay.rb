@@ -985,7 +985,7 @@ end
       "=[#{schema_public_privileges}]+)\/\\w+,?)+|)\\|"
     schema_acl_regex = Regexp.new(schema_acl)
 
-    databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate;'
+    databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate AND datname != \'rdsadmin\';'
     databases_query = sql.query(databases_sql, [pg_db])
     databases = databases_query.lines
 
