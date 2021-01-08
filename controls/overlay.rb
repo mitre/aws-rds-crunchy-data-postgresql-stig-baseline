@@ -562,7 +562,7 @@ control "V-72905" do
   administrator (shown here as \"postgres\"), run the following SQL: 
   $ sudo su - postgres 
   $ psql -c \"SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig
-  FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_authid a
+  FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_roles a
   ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL\" 
   In the query results, a prosecdef value of \"t\" on a row indicates that that
   function uses privilege elevation. 
@@ -592,7 +592,7 @@ pg_host = input('pg_host')
 
   security_definer_sql = "SELECT nspname, proname, prosecdef "\
     "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
-    "JOIN pg_authid a ON a.oid = p.proowner WHERE prosecdef = 't';"
+    "JOIN pg_roles a ON a.oid = p.proowner WHERE prosecdef = 't';"
 
   databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
   databases_query = sql.query(databases_sql, [pg_db])
