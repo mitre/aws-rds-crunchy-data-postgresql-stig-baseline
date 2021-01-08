@@ -552,6 +552,7 @@ end
         end
       end
     end
+  end
 
   control "V-72907" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
