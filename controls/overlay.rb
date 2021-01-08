@@ -530,7 +530,7 @@ end
         "accepting connections"
       connection_error_regex = Regexp.new(connection_error)
 
-      sql_result=sql.query(security_definer_sql, [database])
+      sql_result=sql.query("SELECT nspname, proname, prosecdef FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_roles a ON a.oid = p.proowner WHERE prosecdef = 't';", [database])
 
       if sql_result.empty?
         describe 'There are no database functions that were created with the SECURITY
