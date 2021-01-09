@@ -1142,6 +1142,46 @@ end
     end
   end
 
+  control "V-73015" do
+    desc "check", "To check if password encryption is enabled, as the database
+    administrator (shown here as \"postgres\"), run the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW password_encryption\" "
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    To enable password_encryption, as the database administrator, edit
+    postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    password_encryption = on 
+    Institute a policy of not using the \"WITH UNENCRYPTED PASSWORD\" option with
+    the CREATE ROLE/USER and ALTER ROLE/USER commands. (This option overrides the
+    setting of the password_encryption configuration parameter.) 
+    As the system administrator, restart the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl restart postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} restart"
+    
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    describe sql.query('SHOW password_encryption;', [pg_db]) do
+      its('output') { should match /on|true/i }
+    end
+
+  end
   
   control "V-73017" do
     title "PostgreSQL must enforce access restrictions associated with changes to the
@@ -1249,6 +1289,71 @@ end
     end
   end
 
+  control "V-73019" do
+    desc "check", "First, as the database administrator, review the current
+    log_line_prefix settings by running the following SQL: 
+    $ sudo su - postgres 
+    $ psql -c \"SHOW log_line_prefix\" 
+    If log_line_prefix does not contain at least '< %t %u %d %r %p %t >', this
+    is a finding. 
+    Next, review the current shared_preload_libraries settings by running the
+    following SQL: 
+    $ psql -c \"SHOW shared_preload_libraries\" 
+    If shared_preload_libraries does not contain \"pgaudit\", this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    Configure the database to supply additional auditing information to protect
+    against a user falsely repudiating having performed organization-defined
+    actions. 
+    Using pgaudit PostgreSQL can be configured to audit these requests. See
+    supplementary content APPENDIX-B for documentation on installing pgaudit. 
+    To ensure that logging is enabled, review supplementary content APPENDIX-C for
+    instructions on enabling logging. 
+    Modify the configuration of audit logs to include details identifying the
+    individual user: 
+    First, as the database administrator (shown here as \"postgres\"), edit
+    postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    Extra parameters can be added to the setting log_line_prefix to identify the
+    user: 
+    log_line_prefix = '< %t %u %d %r %p %t >' 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload 
+    Use accounts assigned to individual users. Where the application connects to
+    PostgreSQL using a standard, shared account, ensure that it also captures the
+    individual user identification and passes it to PostgreSQL."
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = %w(%t %u %d %p %r)
+
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
+    end
+
+    describe sql.query('SHOW shared_preload_libraries;', [pg_db]) do
+      its('output') { should include 'pgaudit' }
+    end
+  end
+
   control "V-73023" do
     describe "A manual review is required to ensure the system provides a warning to appropriate support staff when
       allocated audit record storage volume reaches 75% of maximum audit record storage capacity" do
@@ -1275,6 +1380,150 @@ end
   control "V-73039" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-73033" do
+    desc "check", "As the database administrator (shown here as \"postgres\"),
+    verify the current log_line_prefix setting in postgresql.conf:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_line_prefix\"
+
+    Verify that the current settings are appropriate for the organization.
+
+    The following is what is possible for logged information:
+
+    # %a = application name
+    # %u = user name
+    # %d = database name
+    # %r = remote host and port
+    # %h = remote host
+    # %p = process ID
+    # %t = timestamp without milliseconds
+    # %m = timestamp with milliseconds
+    # %i = command tag
+    # %e = SQL state
+    # %c = session ID
+    # %l = session line number
+    # %s = session start timestamp
+    # %v = virtual transaction ID
+    # %x = transaction ID (0 if none)
+    # %q = stop here in non-session
+    # processes
+
+    If the audit record does not log events required by the organization, this is a
+    finding.
+
+    Next, verify the current settings of log_connections and log_disconnections by
+    running the following SQL:
+
+    $ psql -c \"SHOW log_connections\"
+    $ psql -c \"SHOW log_disconnections\"
+
+    If both settings are off, this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+
+    To ensure that logging is enabled, review supplementary content APPENDIX-C for
+    instructions on enabling logging. 
+
+    If logging is enabled the following configurations must be made to log
+    connections, date/time, username and session identifier. 
+    First, edit the postgresql.conf file as a privileged user: 
+
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+
+    Edit the following parameters based on the organization's needs (minimum
+    requirements are as follows): 
+
+    log_connections = on 
+    log_disconnections = on 
+    log_line_prefix = '< %t %u %d %p >' 
+
+    Now, as the system administrator, reload the server with the new configuration: 
+
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = %w(%t %u %d %p)
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
+    end
+
+    describe sql.query('SHOW log_connections;', [pg_db]) do
+      its('output') { should_not match /off|false/i }
+    end
+
+    describe sql.query('SHOW log_disconnections;', [pg_db]) do
+      its('output') { should_not match /off|false/i }
+    end
+  end
+
+  control "V-73041" do
+    desc "check", "As the database administrator (usually postgres), run the
+    following SQL: 
+    $ sudo su - postgres 
+    $ psql -c \"SHOW log_line_prefix\" 
+    If the query result does not contain \"%t\", this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    Logging must be enabled in order to capture timestamps. To ensure that logging
+    is enabled, review supplementary content APPENDIX-C for instructions on
+    enabling logging. 
+    If logging is enabled the following configurations must be made to log events
+    with timestamps: 
+    First, as the database administrator (shown here as \"postgres\"), edit
+    postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    Add %m to log_line_prefix to enable timestamps with milliseconds: 
+    log_line_prefix = '< %t >' 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = ['%t']
+
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
     end
   end
 
@@ -1428,4 +1677,64 @@ end
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
+
+  control "V-73123" do
+    desc "check", "Note: The following instructions use the PGDATA environment
+    variable. See supplementary content APPENDIX-F for instructions on configuring
+    PGDATA.
+    First, as the database administrator (shown here as \"postgres\"), check the
+    current log_line_prefix setting by running the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_line_prefix\"
+    If log_line_prefix does not contain %t %u %d, this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA environment
+    variable. See supplementary content APPENDIX-F for instructions on configuring
+    PGDATA.
+    To check that logging is enabled, review supplementary content APPENDIX-C for
+    instructions on enabling logging.
+    First edit the postgresql.conf file as the database administrator (shown here
+    as \"postgres\"):
+    $ sudo su - postgres
+    $ vi ${PGDATA?}/postgresql.conf
+    Extra parameters can be added to the setting log_line_prefix to log application
+    related information:
+    # %a = application name
+    # %u = user name
+    # %d = database name
+    # %r = remote host and port
+    # %p = process ID
+    # %m = timestamp with milliseconds
+    # %t = timestamp without milliseconds
+    # %i = command tag
+    # %s = session startup
+    # %e = SQL state
+    For example:
+    log_line_prefix = '< %t %a %u %d %r %p %i %e %s>’
+    Now, as the system administrator, reload the server with the new configuration:
+    # SYSTEMD SERVER ONLY
+    $ sudo systemctl reload postgresql-9.5
+    # INITD SERVER ONLY
+    $ sudo service postgresql-9.5 reload"
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = %w(%t %u %d)
+
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
+    end
+  end
+
 end
+
