@@ -623,6 +623,12 @@ end
     end
   end
 
+  control "V-72909" do
+    describe 'Requires manual review of the use of a centralized logging solution at this time.' do
+      skip 'Requires manual review of the use of a centralized logging solution at this time.'
+    end
+  end
+
   control "V-72911" do
 pg_owner = input('pg_owner')
 pg_dba = input('pg_dba')
