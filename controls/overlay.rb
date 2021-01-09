@@ -900,12 +900,9 @@ end
   end
 
   control "V-72979" do
-    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
-
-    ssl_crl_file_query = sql.query('SHOW ssl_crl_file;', [input('pg_db')])
-
-    describe ssl_crl_file_query do
-      its('output') { should match /^\w+\.crl$/ }
+    impact 0.0
+    describe 'This control is not applicable on postgres within aws rds, as aws manages this capability' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages this capability'
     end
   end
 
@@ -914,6 +911,114 @@ end
       DoD-defined auditable events within all DBMS/database components.' do
       skip 'A manual review is required to ensure PostgreSQL provides audit record generation capability for
       DoD-defined auditable events within all DBMS/database components.'
+    end
+  end
+
+  control "V-72985" do
+    desc "check", "Note: The following instructions use the PGDATA environment
+    variable. See supplementary content APPENDIX-F for instructions on configuring
+    PGDATA.
+    First, as the database administrator (shown here as \"postgres\"), verify the
+    current log_line_prefix setting by running the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_line_prefix\"
+    If log_line_prefix does not contain %t, this is a finding.
+    Next check the logs to verify time stamps are being logged:
+    $ sudo su - postgres
+    $ cat ${PGDATA?}/pg_log/<latest_log>
+    < 2016-02-23 12:53:33.947 EDT postgres postgres 570bd68d.3912 >LOG: connection
+    authorized: user=postgres database=postgres
+    < 2016-02-23 12:53:41.576 EDT postgres postgres 570bd68d.3912 >LOG: AUDIT:
+    SESSION,1,1,DDL,CREATE TABLE,,,CREATE TABLE test_srg(id INT);,<none>
+    < 2016-02-23 12:53:44.372 EDT postgres postgres 570bd68d.3912 >LOG:
+    disconnection: session time: 0:00:10.426 user=postgres database=postgres
+    host=[local]
+    If time stamps are not being logged, this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    PostgreSQL will not log anything if logging is not enabled. To ensure that
+    logging is enabled, review supplementary content APPENDIX-C for instructions on
+    enabling logging. 
+    If logging is enabled the following configurations must be made to log events
+    with time stamps:  
+    First, as the database administrator (shown here as \"postgres\"), edit
+    postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    Add %m to log_line_prefix to enable time stamps with milliseconds: 
+    log_line_prefix = '< %t >' 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+    
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      its('output') { should match '%t' }
+    end
+  end
+
+  control "V-72987" do
+    desc "check", "Check PostgreSQL settings and existing audit records to verify a
+    user name associated with the event is being captured and stored with the audit
+    records. If audit records exist without specific user information, this is a
+    finding.
+    First, as the database administrator (shown here as \"postgres\"), verify the
+    current setting of log_line_prefix by running the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_line_prefix\"
+    If log_line_prefix does not contain %t, %u, %d, %p, %r, this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    Logging must be enabled in order to capture the identity of any user/subject or
+    process associated with an event. To ensure that logging is enabled, review
+    supplementary content APPENDIX-C for instructions on enabling logging. 
+    To enable username, database name, process ID, remote host/port and application
+    name in logging, as the database administrator (shown here as \"postgres\"),
+    edit the following in postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    log_line_prefix = '< %t %u %d %p %r >' 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = %w(%t %u %d %p %r)
+
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
     end
   end
 
