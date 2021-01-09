@@ -21,6 +21,7 @@ inputs:
   type: array
   value:
    - "rdsadmin"
+  sensitive: true
   profile: pgstigcheck-inspec
   
 - name: rds_superusers
@@ -28,6 +29,7 @@ inputs:
   type: array
   value:
    - "postgres"
+  sensitive: true
   profile: pgstigcheck-inspec
 
 #- name: pg_owner
