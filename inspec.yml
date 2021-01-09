@@ -21,7 +21,6 @@ inputs:
   type: array
   value:
    - "rdsadmin"
-  sensitive: true
   profile: pgstigcheck-inspec
   
 - name: rds_superusers
@@ -29,9 +28,71 @@ inputs:
   type: array
   value:
    - "postgres"
-  sensitive: true
   profile: pgstigcheck-inspec
 
+- name: pg_owner
+  description: "The system user of the postgres process"
+  type: string
+  value: "postgres"
+  required: true
+  sensitive: true
+
+- name: pg_group
+  description: "The system group of the progress process"
+  type: string
+  value: "postgres"
+  required: true
+  sensitive: true
+
+- name: pg_owner_password
+  description: "The postgres database owner password"
+  type: string
+  value: ""
+  required: true
+  sensitive: true
+
+- name: pg_dba
+  description: "The postgres DBA user to access the test database"
+  type: string
+  value: "postgres"
+  required: true
+  sensitive: true
+
+- name: pg_dba_password
+  description: "The password for the postgres DBA user"
+  type: string
+  value: ""
+  required: true
+  sensitive: true
+
+- name: pg_user
+  description: "The postgres daatabase system user"
+  type: string
+  value: "pguser"
+  required: true
+  sensitive: true
+
+- name: pg_user_password
+  description: "The postgres database system user password"
+  type: string
+  value: ""
+  required: true
+  sensitive: true
+
+- name: pg_host
+  description: "The hostname or IP address used to connect to the database"
+  type: string
+  value: "localhost"
+  required: true
+  sensitive: true
+
+- name: pg_port
+  description: "The port used to connect to the database"
+  type: numeric
+  value: 5432
+  required: true
+  sensitive: true
+  
 #- name: pg_owner
 #  description: "The system user of the postgres process"
 #  type: string
