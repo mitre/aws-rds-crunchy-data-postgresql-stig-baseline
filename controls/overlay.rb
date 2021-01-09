@@ -791,6 +791,72 @@ end
     end
   end
 
+  control "V-72961" do
+    desc "check", "First, as the database administrator, verify that log_connections
+    and log_disconnections are enabled by running the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_connections\"
+    $ psql -c \"SHOW log_disconnections\"
+    If either is off, this is a finding.
+    Next, verify that log_line_prefix contains sufficient information by running
+    the following SQL:
+    $ sudo su - postgres
+    $ psql -c \"SHOW log_line_prefix\"
+    If log_line_prefix does not contain at least %t %u %d %p, this is a finding."
+
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    To ensure that logging is enabled, review supplementary content APPENDIX-C for
+    instructions on enabling logging. 
+    First, as the database administrator (shown here as \"postgres\"), edit
+    postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    Edit the following parameters as such: 
+    log_connections = on 
+    log_disconnections = on 
+    log_line_prefix = '< %t %u %d %p: >' 
+    Where: 
+    * %t is the time and date without milliseconds
+    * %u is the username 
+    * %d is the database 
+    * %p is the Process ID for the connection 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    describe sql.query('SHOW log_connections;', [pg_db]) do
+      its('output') { should_not match /off|false/i }
+    end
+
+    describe sql.query('SHOW log_disconnections;', [pg_db]) do
+      its('output') { should_not match /off|false/i }
+    end
+
+    log_line_prefix_escapes = %w(%t %u %d %p)
+
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
+    end
+end
+
   control "V-72963" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
