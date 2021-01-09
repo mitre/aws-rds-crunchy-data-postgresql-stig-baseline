@@ -1065,6 +1065,61 @@ end
     end
   end
 
+  control "V-73005" do
+    desc "fix", "Note: The following instructions use the PGDATA and PGVER
+    environment variables. See supplementary content APPENDIX-F for instructions on
+    configuring PGDATA and APPENDIX-H for PGVER.
+    To ensure that logging is enabled, review supplementary content APPENDIX-C for
+    instructions on enabling logging. 
+    If logging is enabled the following configurations can be made to log the
+    source of an event. 
+    First, as the database administrator, edit postgresql.conf: 
+    $ sudo su - postgres 
+    $ vi ${PGDATA?}/postgresql.conf 
+    ###### Log Line Prefix 
+    Extra parameters can be added to the setting log_line_prefix to log source of
+    event: 
+    # %u = user name 
+    # %d = database name 
+    # %r = remote host and port 
+    # %p = process ID 
+    # %t = timestamp
+    For example: 
+    log_line_prefix = '< %u %d %r %p %t >' 
+    ###### Log Hostname 
+    By default only IP address is logged. To also log the hostname the following
+    parameter can also be set in postgresql.conf: 
+    log_hostname = on 
+    Now, as the system administrator, reload the server with the new configuration: 
+    # SYSTEMD SERVER ONLY 
+    $ sudo systemctl reload postgresql-${PGVER?}
+    # INITD SERVER ONLY 
+    $ sudo service postgresql-${PGVER?} reload"
+
+    pg_ver = input('pg_version')
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    log_line_prefix_escapes = %w(%u %d %r %p %t)
+    log_line_prefix_escapes.each do |escape|
+      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+        its('output') { should include escape }
+      end
+    end
+
+    describe sql.query('SHOW log_hostname;', [pg_db]) do
+      its('output') { should match /(on|true)/i }
+    end
+  end
+
   control "V-73009" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
