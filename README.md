@@ -45,6 +45,9 @@ pg_host: ''
 
 # The port used to connect to the database
 pg_port: 5432
+
+# The name of the database to connect to
+pg_db: ''
 ```
 
 # Running This Baseline Directly from Github
