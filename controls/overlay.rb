@@ -12,7 +12,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
   end
 
-  control "V-72843" do
+  control "V-233512" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
