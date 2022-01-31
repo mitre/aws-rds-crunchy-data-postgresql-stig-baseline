@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-include_controls 'pgstigcheck-inspec' do
+include_controls 'crunchy-data-postgresql-stig-baseline' do
 
-  control "V-72841" do
+  control "V-23511" do
 
    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
@@ -25,20 +25,20 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
-  control "V-72847" do
+  control "V-233514" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72849" do
+  control "V-233515" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
   
-  control "V-72851" do
+  control "V-233516" do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     describe sql.query('SHOW client_min_messages;', [input('pg_db')]) do
@@ -46,28 +46,28 @@ include_controls 'pgstigcheck-inspec' do
     end
   end
 
-  control "V-72853" do
+  control "V-233517" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72855" do
+  control "V-233518" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72857" do
+  control "V-233519" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
   
-  control 'V-72859' do
+  control 'V-233520' do
   if input('windows_runner')
     describe 'Requires manual review at this time.' do
       skip 'Requires manual review at this time.'
@@ -131,7 +131,7 @@ include_controls 'pgstigcheck-inspec' do
   end
 end      
       
-  control "V-72861" do
+  control "V-233521" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
     having organization-defined security label values with information in transmission' do
       skip 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
@@ -139,7 +139,7 @@ end
     end
   end
 
-  control 'V-72865' do
+  control 'V-233523' do
     if !input('windows_runner')
       sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
       authorized_owners = input('pg_superusers')
@@ -202,7 +202,7 @@ end
     end
   end
 
-  control "V-72869" do
+  control "V-233525" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
     having organization-defined security label values with information in storage' do
     skip 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
@@ -218,7 +218,7 @@ end
     end
   end
 
-  control "V-72873" do
+  control "V-233526" do
     describe 'A manual review is require to ensure PostgreSQL and associated applications reserve the use of dynamic
     code execution for situations that require it.' do
     skip 'A manual review is require to ensure PostgreSQL and associated applications reserve the use of dynamic
@@ -226,7 +226,7 @@ end
     end 
   end
 
-  control "V-72875" do
+  control "V-233528" do
     describe 'PostgreSQL and associated applications, when making use of dynamic code
     execution, must scan input data for invalid values that may indicate a code injection attack' do
     skip 'PostgreSQL and associated applications, when making use of dynamic code
@@ -234,7 +234,7 @@ end
     end
   end
 
-  control "V-72877" do
+  control "V-233529" do
     describe 'A manual review is required to ensure PostgreSQL allocates audit record storage capacity in accordance
     with organization-defined audit record storage requirements' do
     skip 'A manual review is required to ensure PostgreSQL allocates audit record storage capacity in accordance
@@ -242,7 +242,7 @@ end
     end
   end
 
-  control "V-72883" do
+  control "V-233530" do
   sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
   authorized_owners = input('pg_superusers')
@@ -346,19 +346,19 @@ end
   end
 end
 
-control "V-72885" do
+control "V-233531" do
   describe 'Requires manual review of the RDS audit log system at this time.' do
     skip 'Requires manual review of the RDS audit log system at this time.'
   end
 end
 
-control "V-72889" do
+control "V-233533" do
   describe 'Requires manual review of the RDS audit log system at this time.' do
     skip 'Requires manual review of the RDS audit log system at this time.'
   end
 end
 
-  control "V-72891" do
+  control "V-233534" do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
