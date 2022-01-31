@@ -2,7 +2,7 @@
 
 include_controls 'crunchy-data-postgresql-stig-baseline' do
 
-  control "V-23511" do
+  control "V-233511" do
 
    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
