@@ -1,17 +1,17 @@
-name: aws-rds-crunchy-data-postgresql-9-stig-baseline
-title: aws-rds-crunchy-data-postgresql-9-stig-baseline
+name: aws-rds-crunchy-data-postgresql-stig-baseline
+title: aws-rds-crunchy-data-postgresql-stig-baseline
 maintainer: MITRE InSpec Team
-copyright: The MITRE Corporation, 2018
-copyright_email: opensource@mitre.org
-summary: "Inspec Validation Profile for AWS RDS PostgreSQL 9.x STIG"
+copyright: The MITRE Corporation, 2022
+copyright_email: saf@groups.mitre.org
+summary: "Inspec Validation Profile for AWS RDS hosted Crunchy Data PostgreSQL Security Technical Implementation Guide Version 1, Release: 1 Benchmark Date: 20 Nov 2020"
 license: Apache-2.0
 Description: An InSpec Compliance Profile. 
-version: 1.7.0
+version: 1.1.0
 inspec_version: ">= 4.0"
 
 depends:
-- name: pgstigcheck-inspec
-  url: https://github.com/mitre/pgstigcheck-inspec/archive/master.tar.gz
+- name: crunchy-data-postgresql-stig-baseline
+  url: https://github.com/mitre/crunchy-data-postgresql-stig-baseline/archive/master.tar.gz
   
 inputs:
 - name: pg_superusers
@@ -19,7 +19,7 @@ inputs:
   type: array
   value:
    - "rdsadmin"
-  profile: pgstigcheck-inspec
+  profile: crunchy-data-postgresql-stig-baseline
   sensitive: true
   
 - name: rds_superusers
@@ -27,7 +27,7 @@ inputs:
   type: array
   value:
    - "postgres"
-  profile: pgstigcheck-inspec
+  profile: crunchy-data-postgresql-stig-baseline
   sensitive: true
 
 - name: pg_owner
