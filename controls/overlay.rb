@@ -377,7 +377,7 @@ end
     end
   end
 
-  control "V-72893" do
+  control "V-233535" do
     describe 'A manual review is required to ensure PostgreSQL provides an immediate real-time alert to appropriate
       support staff of all audit failure events requiring real-time alerts' do
       skip 'A manual review is required to ensure PostgreSQL provides an immediate real-time alert to appropriate
@@ -385,7 +385,7 @@ end
     end
   end
 
-  control "V-72897" do
+  control "V-233539" do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('pg_superusers')
     pg_db = input('pg_db')
@@ -490,21 +490,21 @@ end
   end
 
 
-  control "V-72899" do
+  control "V-233540" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72901" do
+  control "V-233541" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72903" do
+  control "V-233542" do
     describe 'A manual review is required to ensure PostgreSQL includes additional, more detailed, organization-defined
       information in the audit records for audit events identified by type,
       location, or subject' do
@@ -514,122 +514,19 @@ end
     end
   end
 
-control "V-72905" do
-  title "Execution of software modules (to include functions and trigger
-  procedures) with elevated privileges must be restricted to necessary cases
-  only."
-  desc  "In certain situations, to provide required functionality, PostgreSQL
-  needs to execute internal logic (stored procedures, functions, triggers, etc.)
-  and/or external code modules with elevated privileges. However, if the
-  privileges required for execution are at a higher level than the privileges
-  assigned to organizational users invoking the functionality
-  applications/programs, those users are indirectly provided with greater
-  privileges than assigned by organizations.
-      Privilege elevation must be utilized only where necessary and protected
-  from misuse.
-      This calls for inspection of application source code, which will require
-  collaboration with the application developers. It is recognized that in many
-  cases, the database administrator (DBA) is organizationally separate from the
-  application developers, and may have limited, if any, access to source code.
-  Nevertheless, protections of this type are so important to the secure operation
-  of databases that they must not be ignored. At a minimum, the DBA must attempt
-  to obtain assurances from the development organization that this issue has been
-  addressed, and must document what has been discovered."
-
-  impact 0.5
-  tag "severity": "medium"
-  tag "gtitle": "SRG-APP-000342-DB-000302"
-  tag "gid": "V-72905"
-  tag "rid": "SV-87557r2_rule"
-  tag "stig_id": "PGS9-00-003600"
-  tag "fix_id": "F-79347r2_fix"
-  tag "cci": ["CCI-002233"]
-  tag "nist": ["AC-6 (8)", "Rev_4"]
-  tag "false_negatives": nil
-  tag "false_positives": nil
-  tag "documentable": false
-  tag "mitigations": nil
-  tag "severity_override_guidance": false
-  tag "potential_impacts": nil
-  tag "third_party_tools": nil
-  tag "mitigation_controls": nil
-  tag "responsibility": nil
-  tag "ia_controls": nil
-  desc "check", "Functions in PostgreSQL can be created with the SECURITY DEFINER
-  option. When SECURITY DEFINER functions are executed by a user, said function
-  is run with the privileges of the user who created it. 
-  To list all functions that have SECURITY DEFINER, as, the database
-  administrator (shown here as \"postgres\"), run the following SQL: 
-  $ sudo su - postgres 
-  $ psql -c \"SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig
-  FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_roles a
-  ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL\" 
-  In the query results, a prosecdef value of \"t\" on a row indicates that that
-  function uses privilege elevation. 
-  If elevation of PostgreSQL privileges is utilized but not documented, this is a
-  finding. 
-  If elevation of PostgreSQL privileges is documented, but not implemented as
-  described in the documentation, this is a finding. 
-  If the privilege-elevation logic can be invoked in ways other than intended, or
-  in contexts other than intended, or by subjects/principals other than intended,
-  this is a finding."
-
-  desc "fix", "Determine where, when, how, and by what principals/subjects
-  elevated privilege is needed.  
-  To change a SECURITY DEFINER function to SECURITY INVOKER, as the database
-  administrator (shown here as \"postgres\"), run the following SQL: 
-  $ sudo su - postgres 
-  $ psql -c \"ALTER FUNCTION <function_name> SECURITY INVOKER\""
-pg_dba = input('pg_dba')
-
-pg_dba_password = input('pg_dba_password')
-
-pg_db = input('pg_db')
-
-pg_host = input('pg_host')
-
-  sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
-
-  security_definer_sql = "SELECT nspname, proname, prosecdef "\
-    "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
-    "JOIN pg_roles a ON a.oid = p.proowner WHERE prosecdef = 't';"
-
-  databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
-  databases_query = sql.query(databases_sql, [pg_db])
-  databases = databases_query.lines
-
-  databases.each do |database|
-    connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
-      "accepting connections"
-    connection_error_regex = Regexp.new(connection_error)
-
-    sql_result=sql.query(security_definer_sql, [database])
-
-    describe.one do
-      describe sql_result do
-        its('output') { should eq '' }
-      end
-
-      describe sql_result do
-        it { should match connection_error_regex }
-      end
-    end
-  end
-end
-
-  control "V-72907" do
+  control "V-233544" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72909" do
+  control "V-233545" do
     describe 'Requires manual review of the use of a centralized logging solution at this time.' do
       skip 'Requires manual review of the use of a centralized logging solution at this time.'
     end
   end
 
-  control "V-72911" do
+  control "V-233546" do
 pg_owner = input('pg_owner')
 pg_dba = input('pg_dba')
 pg_dba_password = input('pg_dba_password')
@@ -670,128 +567,128 @@ pg_object_exceptions = input('pg_object_exceptions')
   end
 end
 
-  control "V-72913" do
+  control "V-233547" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72915" do
+  control "V-233549" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72917" do
+  control "V-233550" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72919" do
+  control "V-233551" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72921" do
+  control "V-233552" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72923" do
+  control "V-233553" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72925" do
+  control "V-233554" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72927" do
+  control "V-233555" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72929" do
+  control "V-233556" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72931" do
+  control "V-233557" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72933" do
+  control "V-233558" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72939" do
+  control "V-233559" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72941" do
+  control "V-233560" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72945" do
+  control "V-233561" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72947" do
+  control "V-233562" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72949" do
+  control "V-233563" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72951" do
+  control "V-233564" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72955" do
+  control "V-233566" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72957" do
+  control "V-233567" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72959" do
+  control "V-233568" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72961" do
+  control "V-233569" do
     desc "check", "First, as the database administrator, verify that log_connections
     and log_disconnections are enabled by running the following SQL:
     $ sudo su - postgres
@@ -857,56 +754,56 @@ end
     end
 end
 
-  control "V-72963" do
+  control "V-233570" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72965" do
+  control "V-233571" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72969" do
+  control "V-233572" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72971" do
+  control "V-233573" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72973" do
+  control "V-233574" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72975" do
+  control "V-233575" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72977" do
+  control "V-233576" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-72979" do
+  control "V-233577" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages this capability' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages this capability'
     end
   end
 
-  control "V-72983" do
+  control "V-233580" do
     describe 'A manual review is required to ensure PostgreSQL provides audit record generation capability for
       DoD-defined auditable events within all DBMS/database components.' do
       skip 'A manual review is required to ensure PostgreSQL provides audit record generation capability for
@@ -914,7 +811,7 @@ end
     end
   end
 
-  control "V-72985" do
+  control "V-233581" do
     desc "check", "Note: The following instructions use the PGDATA environment
     variable. See supplementary content APPENDIX-F for instructions on configuring
     PGDATA.
@@ -972,7 +869,7 @@ end
     end
   end
 
-  control "V-72987" do
+  control "V-233582" do
     desc "check", "Check PostgreSQL settings and existing audit records to verify a
     user name associated with the event is being captured and stored with the audit
     records. If audit records exist without specific user information, this is a
@@ -1022,7 +919,7 @@ end
     end
   end
 
-  control "V-72989" do
+  control "V-233583" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
@@ -1030,14 +927,14 @@ end
   end
 
 
-  control "V-72993" do
+  control "V-233585" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-72999" do
+  control "V-233588" do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
@@ -1065,7 +962,7 @@ end
     end
   end
 
-  control "V-73005" do
+  control "V-233591" do
     desc "fix", "Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
@@ -1120,21 +1017,21 @@ end
     end
   end
 
-  control "V-73009" do
+  control "V-233593" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73011" do
+  control "V-233594" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73013" do
+  control "V-233595" do
     describe 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
       having organization-defined security label values with information in process' do
       skip 'A manual review is required to ensure PostgreSQL associates organization-defined types of security labels
@@ -1142,28 +1039,13 @@ end
     end
   end
 
-  control "V-73015" do
+  control "V-233596" do
     desc "check", "To check if password encryption is enabled, as the database
     administrator (shown here as \"postgres\"), run the following SQL:
     $ sudo su - postgres
     $ psql -c \"SHOW password_encryption\" "
 
-    desc "fix", "Note: The following instructions use the PGDATA and PGVER
-    environment variables. See supplementary content APPENDIX-F for instructions on
-    configuring PGDATA and APPENDIX-H for PGVER.
-    To enable password_encryption, as the database administrator, edit
-    postgresql.conf: 
-    $ sudo su - postgres 
-    $ vi ${PGDATA?}/postgresql.conf 
-    password_encryption = on 
-    Institute a policy of not using the \"WITH UNENCRYPTED PASSWORD\" option with
-    the CREATE ROLE/USER and ALTER ROLE/USER commands. (This option overrides the
-    setting of the password_encryption configuration parameter.) 
-    As the system administrator, restart the server with the new configuration: 
-    # SYSTEMD SERVER ONLY 
-    $ sudo systemctl restart postgresql-${PGVER?}
-    # INITD SERVER ONLY 
-    $ sudo service postgresql-${PGVER?} restart"
+    desc "fix", "Set password_encryption to 'on' or 'true'"
     
     pg_ver = input('pg_version')
 
@@ -1183,38 +1065,17 @@ end
 
   end
   
-  control "V-73017" do
-    title "PostgreSQL must enforce access restrictions associated with changes to the
-    configuration of PostgreSQL or database(s)."
-    desc  "Failure to provide logical access restrictions associated with changes to
-    configuration may have significant effects on the overall security of the system.
-    When dealing with access restrictions pertaining to change control, it should be
-    noted that any changes to the hardware, software, and/or firmware components of the
-    information system can potentially have significant effects on the overall security
-    of the system.
-    Accordingly, only qualified and authorized individuals should be allowed to obtain
-    access to system components for the purposes of initiating changes, including
-    upgrades and modifications."
-    impact 0.5
-    tag "severity": "medium"
-    tag "gtitle": "SRG-APP-000380-DB-000360"
-    tag "gid": "V-73017"
-    tag "rid": "SV-87669r1_rule"
-    tag "stig_id": "PGS9-00-009600"
-    tag "cci": ["CCI-001813"]
-    tag "nist": ["CM-5 (1)", "Rev_4"]
-    tag "check": "To list all the permissions of individual roles, as the database
+  control "V-233597" do
+    desc "check": "To list all the permissions of individual roles, as the database
     administrator (shown here as \"postgres\"), run the following SQL:
-    $ sudo su - postgres
     $ psql -c \"\\du
     If any role has SUPERUSER that should not, this is a finding.
     Next, list all the permissions of databases and schemas by running the following SQL:
-    $ sudo su - postgres
     $ psql -c \"\\l\"
     $ psql -c \"\\dn+\"
     If any database or schema has update (\"W\") or create (\"C\") privileges and should
     not, this is a finding."
-    tag "fix": "Configure PostgreSQL to enforce access restrictions associated with
+    desc "fix": "Configure PostgreSQL to enforce access restrictions associated with
     changes to the configuration of PostgreSQL or database(s).
     Use ALTER ROLE to remove accesses from roles:
     $ psql -c \"ALTER ROLE <role_name> NOSUPERUSER\"
@@ -1289,7 +1150,7 @@ end
     end
   end
 
-  control "V-73019" do
+  control "V-233598" do
     desc "check", "First, as the database administrator, review the current
     log_line_prefix settings by running the following SQL: 
     $ sudo su - postgres 
@@ -1354,7 +1215,7 @@ end
     end
   end
 
-  control "V-73023" do
+  control "V-233599" do
     describe "A manual review is required to ensure the system provides a warning to appropriate support staff when
       allocated audit record storage volume reaches 75% of maximum audit record storage capacity" do
       skip "A manual review is required to ensure the system provides a warning to appropriate support staff when
@@ -1362,7 +1223,7 @@ end
     end 
   end
 
-  control "V-73027" do
+  control "V-233601" do
     describe "A manual review is required to ensure PostgreSQL requires users to reauthenticate when organization-defined
       circumstances or situations require reauthentication" do
       skip  "A manual review is required to ensure PostgreSQL requires users to reauthenticate when organization-defined
@@ -1370,23 +1231,16 @@ end
     end
   end
 
-  control "V-73029" do
+  control "V-233602" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73039" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
-    end
-  end
-
-  control "V-73033" do
+  control "V-233604" do
     desc "check", "As the database administrator (shown here as \"postgres\"),
-    verify the current log_line_prefix setting in postgresql.conf:
-    $ sudo su - postgres
+    verify the current log_line_prefix setting:
     $ psql -c \"SHOW log_line_prefix\"
 
     Verify that the current settings are appropriate for the organization.
@@ -1408,8 +1262,7 @@ end
     # %s = session start timestamp
     # %v = virtual transaction ID
     # %x = transaction ID (0 if none)
-    # %q = stop here in non-session
-    # processes
+    # %q = stop here in non-session processes
 
     If the audit record does not log events required by the organization, this is a
     finding.
@@ -1431,10 +1284,6 @@ end
 
     If logging is enabled the following configurations must be made to log
     connections, date/time, username and session identifier. 
-    First, edit the postgresql.conf file as a privileged user: 
-
-    $ sudo su - postgres 
-    $ vi ${PGDATA?}/postgresql.conf 
 
     Edit the following parameters based on the organization's needs (minimum
     requirements are as follows): 
@@ -1443,13 +1292,7 @@ end
     log_disconnections = on 
     log_line_prefix = '< %t %u %d %p >' 
 
-    Now, as the system administrator, reload the server with the new configuration: 
-
-    # SYSTEMD SERVER ONLY 
-    $ sudo systemctl reload postgresql-${PGVER?}
-
-    # INITD SERVER ONLY 
-    $ sudo service postgresql-${PGVER?} reload"
+    Now, as the system administrator, reload the server with the new configuration"
 
     pg_ver = input('pg_version')
 
@@ -1479,10 +1322,15 @@ end
     end
   end
 
-  control "V-73041" do
+  control "V-233607" do
+    describe 'Requires manual review of the RDS audit log system at this time.' do
+      skip 'Requires manual review of the RDS audit log system at this time.'
+    end
+  end
+
+  control "V-233608" do
     desc "check", "As the database administrator (usually postgres), run the
     following SQL: 
-    $ sudo su - postgres 
     $ psql -c \"SHOW log_line_prefix\" 
     If the query result does not contain \"%t\", this is a finding."
 
@@ -1494,17 +1342,10 @@ end
     enabling logging. 
     If logging is enabled the following configurations must be made to log events
     with timestamps: 
-    First, as the database administrator (shown here as \"postgres\"), edit
-    postgresql.conf: 
-    $ sudo su - postgres 
-    $ vi ${PGDATA?}/postgresql.conf 
+
     Add %m to log_line_prefix to enable timestamps with milliseconds: 
     log_line_prefix = '< %t >' 
-    Now, as the system administrator, reload the server with the new configuration: 
-    # SYSTEMD SERVER ONLY 
-    $ sudo systemctl reload postgresql-${PGVER?}
-    # INITD SERVER ONLY 
-    $ sudo service postgresql-${PGVER?} reload"
+    Now, as the system administrator, reload the server with the new configuration"
 
     pg_ver = input('pg_version')
 
@@ -1527,20 +1368,20 @@ end
     end
   end
 
-  control "V-73043" do
+  control "V-233609" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73045" do
+  control "V-233610" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-73049" do
+  control "V-233612" do
     title "PostgreSQL must uniquely identify and authenticate organizational users (or
     processes acting on behalf of organizational users)."
     desc  "To assure accountability and prevent unauthenticated access, organizational
