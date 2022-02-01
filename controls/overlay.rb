@@ -18,7 +18,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     end
   end
 
-  control "V-72845" do
+  control "V-233513" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
@@ -210,7 +210,7 @@ end
     end
   end
 
-  control "V-72871" do
+  control "V-233526" do
     describe 'A manual review is required to ensure PostgreSQL checks the validity of all data inputs except those
     specifically identified by the organization' do
     skip 'A manual review is required to ensure PostgreSQL checks the validity of all data inputs except those
