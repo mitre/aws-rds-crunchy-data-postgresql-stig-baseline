@@ -1066,7 +1066,7 @@ end
   end
   
   control "V-233597" do
-    desc "check": "To list all the permissions of individual roles, as the database
+    desc "check", "To list all the permissions of individual roles, as the database
     administrator (shown here as \"postgres\"), run the following SQL:
     $ psql -c \"\\du
     If any role has SUPERUSER that should not, this is a finding.
@@ -1075,7 +1075,7 @@ end
     $ psql -c \"\\dn+\"
     If any database or schema has update (\"W\") or create (\"C\") privileges and should
     not, this is a finding."
-    desc "fix": "Configure PostgreSQL to enforce access restrictions associated with
+    desc "fix", "Configure PostgreSQL to enforce access restrictions associated with
     changes to the configuration of PostgreSQL or database(s).
     Use ALTER ROLE to remove accesses from roles:
     $ psql -c \"ALTER ROLE <role_name> NOSUPERUSER\"
@@ -1382,64 +1382,22 @@ end
   end
 
   control "V-233612" do
-    title "PostgreSQL must uniquely identify and authenticate organizational users (or
-    processes acting on behalf of organizational users)."
-    desc  "To assure accountability and prevent unauthenticated access, organizational
-    users must be identified and authenticated to prevent potential misuse and
-    compromise of the system.
-    Organizational users include organizational employees or individuals the
-    organization deems to have cmpuivalent status of employees (e.g., contractors).
-    Organizational users (and any processes acting on behalf of users) must be uniquely
-    identified and authenticated for all accesses, except the following:
-    (i) Accesses explicitly identified and documented by the organization. Organizations
-    document specific user actions that can be performed on the information system
-    without identification or authentication; and
-    (ii) Accesses that occur through authorized use of group authenticators without
-    individual authentication. Organizations may rcmpuire unique identification of
-    individuals using shared accounts, for detailed accountability of individual
-    activity."
-    impact 0.5
-    tag "severity": "medium"
-    tag "gtitle": "SRG-APP-000148-DB-000103"
-    tag "gid": "V-73049"
-    tag "rid": "SV-87701r1_rule"
-    tag "stig_id": "PGS9-00-011500"
-    tag "cci": ["CCI-000764"]
-    tag "nist": ["IA-2", "Rev_4"]
-    tag "check": "Review PostgreSQL settings to determine whether organizational users
+    desc "check", "Review PostgreSQL settings to determine whether organizational users
     are uniquely identified and authenticated when logging on/connecting to the system.
     To list all roles in the database, as the database administrator (shown here as
     \"postgres\"), run the following SQL:
-    $ sudo su - postgres
     $ psql -c \"\\du\"
     If organizational users are not uniquely identified and authenticated, this is a
-    finding.
-    Next, as the database administrator (shown here as \"postgres\"), verify the current
-    pg_hba.conf authentication settings:
-    $ sudo su - postgres
-    $ cat ${PGDATA?}/pg_hba.conf
-    If every role does not have unique authentication rcmpuirements, this is a finding.
-    If accounts are determined to be shared, determine if individuals are first
-    individually authenticated. If individuals are not individually authenticated before
-    using the shared account, this is a finding."
+    finding."
 
-    tag "fix": "Note: The following instructions use the PGDATA environment variable.
+    desc "fix", "Note: The following instructions use the PGDATA environment variable.
     See supplementary content APPENDIX-F for instructions on configuring PGDATA.
     Configure PostgreSQL settings to uniquely identify and authenticate all
     organizational users who log on/connect to the system.
     To create roles, use the following SQL:
     CREATE ROLE <role_name> [OPTIONS]
     For more information on CREATE ROLE, see the official documentation:
-    https://www.postgresql.org/docs/current/static/sql-createrole.html
-    For each role created, the database administrator can specify database
-    authentication by editing pg_hba.conf:
-    $ sudo su - postgres
-    $ vi ${PGDATA?}/pg_hba.conf
-    An example pg_hba entry looks like this:
-    # TYPE DATABASE USER ADDRESS METHOD
-    host test_db bob 192.168.0.0/16 md5
-    For more information on pg_hba.conf, see the official documentation:
-    https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html"
+    https://www.postgresql.org/docs/current/static/sql-createrole.html"
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     pg_users = input('pg_users')
@@ -1455,7 +1413,7 @@ end
 
   end
 
-  control "V-73051" do
+  control "V-233613" do
     describe 'A manual review is required to ensure PostgreSQ automatically terminates a user session after
       organization-defined conditions or trigger events requiring session disconnect' do
       skip 'A manual review is required to ensure PostgreSQ automatically terminates a user session after
@@ -1463,7 +1421,7 @@ end
     end
   end
 
-  control "V-73055" do
+  control "V-233615" do
     describe 'A manual review is required to ensure PostgreSQL maps the PKI-authenticated identity to an associated user
       account' do 
       skip 'A manual review is required to ensure PostgreSQL maps the PKI-authenticated identity to an associated user
@@ -1471,7 +1429,7 @@ end
     end
   end
 
-  control "V-73057" do
+  control "V-233616" do
     describe 'A manual review is required to ensure the database contents are protected from unauthorized and unintended
       information transfer by enforcement of a data-transfer policy' do
       skip 'A manual review is required to ensure the database contents are protected from unauthorized and unintended
@@ -1479,53 +1437,52 @@ end
     end
   end
 
-  control "V-73059" do
+  control "V-233617" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73061" do
+  control "V-233618" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73063" do
+  control "V-233619" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73065" do
+  control "V-233620" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-73067" do
+  control "V-233621" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
     end
   end
 
-  control "V-73071" do
+  control "V-233623" do
     impact 0.0
     describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
       skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
     end
   end
 
-  control "V-73123" do
+  control "V-233578" do
     desc "check", "Note: The following instructions use the PGDATA environment
     variable. See supplementary content APPENDIX-F for instructions on configuring
     PGDATA.
     First, as the database administrator (shown here as \"postgres\"), check the
     current log_line_prefix setting by running the following SQL:
-    $ sudo su - postgres
     $ psql -c \"SHOW log_line_prefix\"
     If log_line_prefix does not contain %t %u %d, this is a finding."
 
@@ -1534,10 +1491,6 @@ end
     PGDATA.
     To check that logging is enabled, review supplementary content APPENDIX-C for
     instructions on enabling logging.
-    First edit the postgresql.conf file as the database administrator (shown here
-    as \"postgres\"):
-    $ sudo su - postgres
-    $ vi ${PGDATA?}/postgresql.conf
     Extra parameters can be added to the setting log_line_prefix to log application
     related information:
     # %a = application name
@@ -1552,11 +1505,7 @@ end
     # %e = SQL state
     For example:
     log_line_prefix = '< %t %a %u %d %r %p %i %e %s>’
-    Now, as the system administrator, reload the server with the new configuration:
-    # SYSTEMD SERVER ONLY
-    $ sudo systemctl reload postgresql-9.5
-    # INITD SERVER ONLY
-    $ sudo service postgresql-9.5 reload"
+    Now, as the system administrator, reload the server with the new configuration"
 
     pg_dba = input('pg_dba')
 
