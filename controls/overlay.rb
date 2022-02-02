@@ -1099,7 +1099,6 @@ end
   control "V-233596" do
     desc "check", "To check if password encryption is enabled, as the database
     administrator (shown here as \"postgres\"), run the following SQL:
-    $ sudo su - postgres
     $ psql -c \"SHOW password_encryption\" "
 
     desc "fix", "Set password_encryption to 'on' or 'true'"
