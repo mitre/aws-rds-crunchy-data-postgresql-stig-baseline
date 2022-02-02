@@ -514,6 +514,63 @@ end
     end
   end
 
+  control "V-233543" do
+    desc "check", "Functions in PostgreSQL can be created with the SECURITY DEFINER
+    option. When SECURITY DEFINER functions are executed by a user, said function
+    is run with the privileges of the user who created it. 
+    To list all functions that have SECURITY DEFINER, as, the database
+    administrator (shown here as \"postgres\"), run the following SQL: 
+    $ sudo su - postgres 
+    $ psql -c \"SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig
+    FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_roles a
+    ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL\" 
+    In the query results, a prosecdef value of \"t\" on a row indicates that that
+    function uses privilege elevation. 
+    If elevation of PostgreSQL privileges is utilized but not documented, this is a
+    finding. 
+    If elevation of PostgreSQL privileges is documented, but not implemented as
+    described in the documentation, this is a finding. 
+    If the privilege-elevation logic can be invoked in ways other than intended, or
+    in contexts other than intended, or by subjects/principals other than intended,
+    this is a finding."
+
+    pg_dba = input('pg_dba')
+
+    pg_dba_password = input('pg_dba_password')
+
+    pg_db = input('pg_db')
+
+    pg_host = input('pg_host')
+
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+
+    security_definer_sql = "SELECT nspname, proname, prosecdef "\
+      "FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid "\
+      "JOIN pg_roles a ON a.oid = p.proowner WHERE prosecdef = 't';"
+
+    databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
+    databases_query = sql.query(databases_sql, [pg_db])
+    databases = databases_query.lines
+
+    databases.each do |database|
+      connection_error = "FATAL:\\s+database \"#{database}\" is not currently "\
+        "accepting connections"
+      connection_error_regex = Regexp.new(connection_error)
+
+      sql_result=sql.query(security_definer_sql, [database])
+
+      describe.one do
+        describe sql_result do
+          its('output') { should eq '' }
+        end
+
+        describe sql_result do
+          it { should match connection_error_regex }
+        end
+      end
+    end
+  end
+
   control "V-233544" do
     describe 'Requires manual review of the RDS audit log system at this time.' do
       skip 'Requires manual review of the RDS audit log system at this time.'
@@ -527,21 +584,21 @@ end
   end
 
   control "V-233546" do
-pg_owner = input('pg_owner')
-pg_dba = input('pg_dba')
-pg_dba_password = input('pg_dba_password')
-pg_db = input('pg_db')
-pg_host = input('pg_host')
-pg_object_granted_privileges = input('pg_object_granted_privileges')
-pg_object_public_privileges = input('pg_object_public_privileges')
-pg_object_exceptions = input('pg_object_exceptions')
-  exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
-  object_acl = "^(((#{pg_owner}|rdsadmin=[#{pg_object_granted_privileges}]+|"\
-    "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
-  schemas = ['pg_catalog', 'information_schema']
-  sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    pg_owner = input('pg_owner')
+    pg_dba = input('pg_dba')
+    pg_dba_password = input('pg_dba_password')
+    pg_db = input('pg_db')
+    pg_host = input('pg_host')
+    pg_object_granted_privileges = input('pg_object_granted_privileges')
+    pg_object_public_privileges = input('pg_object_public_privileges')
+    pg_object_exceptions = input('pg_object_exceptions')
+    exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
+    object_acl = "^(((#{pg_owner}|rdsadmin=[#{pg_object_granted_privileges}]+|"\
+      "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
+    schemas = ['pg_catalog', 'information_schema']
+    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
 
-  schemas.each do |schema|
+    schemas.each do |schema|
     objects_sql = "SELECT n.nspname, c.relname, c.relkind, "\
       "pg_catalog.array_to_string(c.relacl, E',') FROM pg_catalog.pg_class c "\
       "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace "\
