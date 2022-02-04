@@ -1,6 +1,6 @@
 # aws-rds-crunchy-data-postgresql-stig-baseline
 
-InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s PostgresSQL Security Technical Implementation Guide (STIG) Version 1, Release 1. (Applies to database versions 10, 11, 12 & 13)
+InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s Crunchy Data PostgreSQL Security Technical Implementation Guide (STIG) Version 1, Release 1. (Applies to database versions 10, 11, 12 & 13)
 
 ## Getting Started  
 
