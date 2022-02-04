@@ -12,7 +12,7 @@ Latest versions and installation options are available at the [InSpec](http://in
 
 ### PSQL client setup
 
-To run the PostgreSQL profile against an AWS RDS Instance, CINC-auditor expects the psql client to be readily available on the same runner system it is installed on.
+To run the PostgreSQL profile against an AWS RDS Instance, InSpec expects the psql client to be readily available on the same runner system it is installed on.
  
 For example, to install the psql client on a Linux runner host:
 ```
