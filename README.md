@@ -84,10 +84,10 @@ pg_port: '5432'
 # Description: 'Postgres users e.g., ["pg_signal_backend", "postgres", "rds_iam", "rds_pgaudit", "rds_replication", "rds_superuser", "rdsadmin", "rdsrepladmin"]'
 pg_users: ["pg_signal_backend", "postgres", "rds_iam", "rds_pgaudit", "rds_replication", "rds_superuser", "rdsadmin", "rdsrepladmin"]
 
-# Description: 'V-73007, V-73009 uses this list of approved database extensions'
+# Description: 'list of approved database extensions'
 approved_ext: ["pgaudit"]
 
-# Description: 'V-73011 uses this list of approved postgres-related packages (e.g., postgresql-server.x86_64, postgresql-odbc.x86_64)'
+# Description: 'uses this list of approved postgres-related packages (e.g., postgresql-server.x86_64, postgresql-odbc.x86_64)'
 approved_packages: []
 
 # Description: 'Postgres super users (e.g., ['postgres']).'
@@ -108,8 +108,8 @@ login_user: ''
 # Description: 'Database host ip'
 login_host: ''
 
-# Description: 'Database version' (default 9.5)
-pg_version: '9.5'
+# Description: 'Database version' (e.g., 12.9)
+pg_version: ''
 
 # Description: 'Postgres ssl setting (e.g., 'on').'
 pg_ssl: ''
