@@ -18,7 +18,7 @@ inputs:
   description: "Authorized superuser accounts"
   type: array
   value:
-   - "rdsadmin"
+    - "rdsadmin"
   # profile: crunchy-data-postgresql-stig-baseline
   sensitive: true
   
@@ -26,7 +26,8 @@ inputs:
   description: "Members of the rds_superusers role"
   type: array
   value:
-   - "postgres"
+    - "postgres"
+  profile: crunchy-data-postgresql-stig-baseline
   sensitive: true
 
 - name: pg_users
