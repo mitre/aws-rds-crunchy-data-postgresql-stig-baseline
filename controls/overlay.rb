@@ -860,14 +860,6 @@ end
     end
   end
 
-  control "V-233580" do
-    describe 'A manual review is required to ensure PostgreSQL provides audit record generation capability for
-      DoD-defined auditable events within all DBMS/database components.' do
-      skip 'A manual review is required to ensure PostgreSQL provides audit record generation capability for
-      DoD-defined auditable events within all DBMS/database components.'
-    end
-  end
-
   control "V-233581" do
     desc "check", "Note: The following instructions use the PGDATA environment
     variable. See supplementary content APPENDIX-F for instructions on configuring
