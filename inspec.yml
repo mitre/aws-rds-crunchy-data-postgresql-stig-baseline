@@ -72,20 +72,6 @@ inputs:
   required: true
   sensitive: true
 
-- name: pg_user
-  description: "The postgres daatabase system user"
-  type: string
-  value: "pguser"
-  required: true
-  sensitive: true
-
-- name: pg_user_password
-  description: "The postgres database system user password"
-  type: string
-  value: ""
-  required: true
-  sensitive: true
-
 - name: pg_host
   description: "The hostname or IP address used to connect to the database"
   type: string
