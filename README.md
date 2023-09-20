@@ -93,21 +93,6 @@ approved_packages: []
 # Description: 'Postgres super users (e.g., ['postgres']).'
 pg_superusers: []
 
-# Description: 'Postgres normal user'
-pg_user: ''
-
-# Description: 'Postgres normal user password'
-pg_user_password: ''
-
-# Description: 'Postgres database table name'
-pg_table: ''
-
-# Description: 'User on remote database server'
-login_user: ''
-
-# Description: 'Database host ip'
-login_host: ''
-
 # Description: 'Database version' (e.g., 12.9)
 pg_version: ''
 
