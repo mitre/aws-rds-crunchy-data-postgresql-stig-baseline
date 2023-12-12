@@ -60,11 +60,9 @@ If you are using a *Windows* based inspec installation, please set the `windows_
 
 ### Example Inputs You Can Use
 
-```
+```yaml
 # Windows or Linux Runner (default value = false)
 windows_runner: false
-
-
 
 # Description: 'Postgres database admin user (e.g., 'postgres').'
 pg_dba: '<master user, e.g., postgres>'
