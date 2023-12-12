@@ -13,8 +13,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control "V-233512" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -26,8 +26,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control "V-233514" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -69,8 +69,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   
   control 'V-233520' do
   if input('windows_runner')
-    describe 'Requires manual review at this time.' do
-      skip 'Requires manual review at this time.'
+    describe 'Requires manual review.' do
+      skip 'Requires manual review.'
     end
   else
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
@@ -347,14 +347,14 @@ end
 end
 
 control "V-233531" do
-  describe 'Requires manual review of the RDS audit log system at this time.' do
-    skip 'Requires manual review of the RDS audit log system at this time.'
+  describe 'Requires manual review of the RDS audit log system.' do
+    skip 'Requires manual review of the RDS audit log system.'
   end
 end
 
 control "V-233533" do
-  describe 'Requires manual review of the RDS audit log system at this time.' do
-    skip 'Requires manual review of the RDS audit log system at this time.'
+  describe 'Requires manual review of the RDS audit log system.' do
+    skip 'Requires manual review of the RDS audit log system.'
   end
 end
 
@@ -572,14 +572,14 @@ end
   end
 
   control "V-233544" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233545" do
-    describe 'Requires manual review of the use of a centralized logging solution at this time.' do
-      skip 'Requires manual review of the use of a centralized logging solution at this time.'
+    describe 'Requires manual review of the use of a centralized logging solution.' do
+      skip 'Requires manual review of the use of a centralized logging solution.'
     end
   end
 
@@ -625,14 +625,14 @@ end
 end
 
   control "V-233547" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233549" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -644,104 +644,104 @@ end
   end
 
   control "V-233551" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233552" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233553" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233554" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233555" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233556" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233557" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233558" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233559" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233560" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233561" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233562" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233563" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233564" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233566" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233567" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233568" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -812,44 +812,44 @@ end
 end
 
   control "V-233570" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233571" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233572" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233573" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233574" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233575" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233576" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -1371,8 +1371,8 @@ end
   end
 
   control "V-233607" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -1424,8 +1424,8 @@ end
   end
 
   control "V-233610" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
@@ -1507,14 +1507,14 @@ end
   end
 
   control "V-233620" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
   control "V-233621" do
-    describe 'Requires manual review of the RDS audit log system at this time.' do
-      skip 'Requires manual review of the RDS audit log system at this time.'
+    describe 'Requires manual review of the RDS audit log system.' do
+      skip 'Requires manual review of the RDS audit log system.'
     end
   end
 
