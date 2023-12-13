@@ -20,8 +20,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
   control "V-233513" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -33,8 +33,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
   control "V-233515" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
   
@@ -48,22 +48,22 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
   control "V-233517" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233518" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233519" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
   
@@ -492,15 +492,15 @@ end
 
   control "V-233540" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233541" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -638,8 +638,8 @@ end
 
   control "V-233550" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -970,16 +970,16 @@ end
 
   control "V-233583" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
 
   control "V-233585" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -1068,15 +1068,15 @@ end
 
   control "V-233593" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233594" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -1281,8 +1281,8 @@ end
 
   control "V-233602" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -1418,8 +1418,8 @@ end
 
   control "V-233609" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -1487,22 +1487,22 @@ end
 
   control "V-233617" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233618" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
   control "V-233619" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
@@ -1520,8 +1520,8 @@ end
 
   control "V-233623" do
     impact 0.0
-    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on' do
-      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system in which the postgres database is running on'
+    describe 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running' do
+      skip 'This control is not applicable on postgres within aws rds, as aws manages the operating system on which the postgres database is running'
     end
   end
 
