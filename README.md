@@ -1,6 +1,6 @@
 # aws-rds-crunchy-data-postgresql-stig-baseline
 
-InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s Crunchy Data PostgreSQL Security Technical Implementation Guide (STIG) Version 1, Release 1. (Applies to database versions 10, 11, 12 & 13)
+InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s Crunchy Data PostgreSQL Security Technical Implementation Guide (STIG) Version 2, Release 1. (Applies to database versions 10, 11, 12 & 13)
 
 ## Getting Started  
 
@@ -135,17 +135,17 @@ When the __"runner"__ host uses this profile baseline for the first time, follow
 ```
 mkdir profiles
 cd profiles
-git clone https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline
-inspec archive aws-rds-crunchy-data-postgresql-9-stig-baseline
+git clone https://github.com/mitre/aws-rds-crunchy-data-postgresql-stig-baseline
+inspec archive aws-rds-crunchy-data-postgresql-stig-baseline
 inspec exec <name of generated archive> -t ssh:// --input-file=<path_to_your_inputs_file/name_of_your_inputs_file.yml> --reporter=cli json:<path_to_your_output_file/name_of_your_output_file.json>
 ```
 For every successive run, follow these steps to always have the latest version of this baseline:
 
 ```
-cd aws-rds-crunchy-data-postgresql-9-stig-baseline
+cd aws-rds-crunchy-data-postgresql-stig-baseline
 git pull
 cd ..
-inspec archive aws-rds-crunchy-data-postgresql-9-stig-baseline --overwrite
+inspec archive aws-rds-crunchy-data-postgresql-stig-baseline --overwrite
 inspec exec <name of generated archive> -t ssh:// --input-file=<path_to_your_inputs_file/name_of_your_inputs_file.yml> --reporter=cli json:<path_to_your_output_file/name_of_your_output_file.json>
 ```
 
@@ -163,7 +163,7 @@ The JSON InSpec results file may also be loaded into a __[full heimdall server](
 * Shivani Karikar - [karikarshivani](https://github.com/karikarshivani)
 
 ## Contributing and Getting Help
-To report a bug or feature request, please open an [issue](https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/issues/new).
+To report a bug or feature request, please open an [issue](https://github.com/mitre/aws-rds-crunchy-data-postgresql-stig-baseline/issues/new).
 
 ### NOTICE
 
