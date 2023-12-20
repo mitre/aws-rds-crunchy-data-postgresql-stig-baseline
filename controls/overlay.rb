@@ -304,8 +304,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
       end
 
       types.each do |type|
-        objects_sql = ''
-
         objects_sql = if database == 'postgres'
                         'SELECT n.nspname, c.relname, c.relkind, '\
                           'pg_catalog.pg_get_userbyid(n.nspowner) FROM pg_catalog.pg_class c '\
@@ -772,8 +770,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload"
 
-    pg_ver = input('pg_version')
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -891,8 +887,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload"
 
-    pg_ver = input('pg_version')
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -937,8 +931,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload"
 
-    pg_ver = input('pg_version')
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -978,7 +970,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     pg_superusers = input('pg_superusers')
     rds_superusers = input('rds_superusers')
     pg_db = input('pg_db')
-    pg_owner = input('pg_owner')
 
     privileges = %w(rolcreatedb rolcreaterole rolsuper)
 
@@ -1029,8 +1020,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     $ sudo systemctl reload postgresql-${PGVER?}
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload"
-
-    pg_ver = input('pg_version')
 
     pg_dba = input('pg_dba')
 
@@ -1083,8 +1072,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     desc 'fix', "Set password_encryption to 'on' or 'true'"
 
-    pg_ver = input('pg_version')
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -1121,7 +1108,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     pg_superusers = input('pg_superusers')
     pg_db = input('pg_db')
-    pg_owner = input('pg_owner')
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
     roles_query = sql.query(roles_sql, [pg_db])
@@ -1166,7 +1152,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
       schemas_sql = 'SELECT n.nspname, FROM pg_catalog.pg_namespace n '\
         "WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
-      schemas_query = sql.query(schemas_query, [database])
+      schemas_query = sql.query(schemas_sql, [database])
       # Handle connection disabled on database
       next unless schemas_query.methods.include?(:output)
       schemas = schemas_query.lines
@@ -1222,8 +1208,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     Use accounts assigned to individual users. Where the application connects to
     PostgreSQL using a standard, shared account, ensure that it also captures the
     individual user identification and passes it to PostgreSQL."
-
-    pg_ver = input('pg_version')
 
     pg_dba = input('pg_dba')
 
@@ -1327,8 +1311,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     Now, as the system administrator, reload the server with the new configuration"
 
-    pg_ver = input('pg_version')
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -1379,8 +1361,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     Add %m to log_line_prefix to enable timestamps with milliseconds:
     log_line_prefix = '< %t >'
     Now, as the system administrator, reload the server with the new configuration"
-
-    pg_ver = input('pg_version')
 
     pg_dba = input('pg_dba')
 
