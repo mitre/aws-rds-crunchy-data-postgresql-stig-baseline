@@ -1,6 +1,6 @@
 # aws-rds-crunchy-data-postgresql-stig-baseline
 
-InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s Crunchy Data PostgreSQL Security Technical Implementation Guide (STIG) Version 1, Release 1. (Applies to database versions 10, 11, 12 & 13)
+InSpec profile to validate the secure configuration of AWS RDS hosted PostgreSQL Database, against [DISA](https://iase.disa.mil/stigs/)'s Crunchy Data PostgreSQL Security Technical Implementation Guide (STIG) Version 2, Release 1. (Applies to database versions 10, 11, 12 & 13)
 
 ## Getting Started  
 
@@ -135,17 +135,17 @@ When the __"runner"__ host uses this profile baseline for the first time, follow
 ```
 mkdir profiles
 cd profiles
-git clone https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline
-inspec archive aws-rds-crunchy-data-postgresql-9-stig-baseline
+git clone https://github.com/mitre/aws-rds-crunchy-data-postgresql-stig-baseline
+inspec archive aws-rds-crunchy-data-postgresql-stig-baseline
 inspec exec <name of generated archive> -t ssh:// --input-file=<path_to_your_inputs_file/name_of_your_inputs_file.yml> --reporter=cli json:<path_to_your_output_file/name_of_your_output_file.json>
 ```
 For every successive run, follow these steps to always have the latest version of this baseline:
 
 ```
-cd aws-rds-crunchy-data-postgresql-9-stig-baseline
+cd aws-rds-crunchy-data-postgresql-stig-baseline
 git pull
 cd ..
-inspec archive aws-rds-crunchy-data-postgresql-9-stig-baseline --overwrite
+inspec archive aws-rds-crunchy-data-postgresql-stig-baseline --overwrite
 inspec exec <name of generated archive> -t ssh:// --input-file=<path_to_your_inputs_file/name_of_your_inputs_file.yml> --reporter=cli json:<path_to_your_output_file/name_of_your_output_file.json>
 ```
 
@@ -163,25 +163,4 @@ The JSON InSpec results file may also be loaded into a __[full heimdall server](
 * Shivani Karikar - [karikarshivani](https://github.com/karikarshivani)
 
 ## Contributing and Getting Help
-To report a bug or feature request, please open an [issue](https://github.com/mitre/aws-rds-crunchy-data-postgresql-9-stig-baseline/issues/new).
-
-### NOTICE
-
-© 2018-2020 The MITRE Corporation.
-
-Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-
-### NOTICE
-MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-
-### NOTICE  
-
-This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.  
-
-No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation. 
-
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA  22102-7539, (703) 983-6000.  
-
-### NOTICE  
-
-DISA STIGs are published by DISA IASE, see: https://iase.disa.mil/Pages/privacy_policy.aspx   
+To report a bug or feature request, please open an [issue](https://github.com/mitre/aws-rds-crunchy-data-postgresql-stig-baseline/issues/new).
