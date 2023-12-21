@@ -1066,12 +1066,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233596' do
-    desc 'check', "To check if password encryption is enabled, as the database
-    administrator (shown here as \"postgres\"), run the following SQL:
-    $ psql -c \"SHOW password_encryption\" "
-
-    desc 'fix', "Set password_encryption to 'on' or 'true'"
-
     pg_dba = input('pg_dba')
 
     pg_dba_password = input('pg_dba_password')
@@ -1083,7 +1077,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
 
     describe sql.query('SHOW password_encryption;', [pg_db]) do
-      its('output') { should match /on|true/i }
+      its('output') { should match /on|true|scram-sha-256/i }
     end
   end
 
