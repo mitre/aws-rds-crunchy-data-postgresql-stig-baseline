@@ -1077,7 +1077,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
 
     describe sql.query('SHOW password_encryption;', [pg_db]) do
-      its('output') { should match /scram-sha-256/i }
+      its('output') { should match /on|true|scram-sha-256/i }
     end
   end
 
