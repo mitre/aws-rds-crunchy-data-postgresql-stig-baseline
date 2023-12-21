@@ -1065,21 +1065,21 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     end
   end
 
-  control 'V-233596' do
-    pg_dba = input('pg_dba')
+  # control 'V-233596' do
+  #   pg_dba = input('pg_dba')
 
-    pg_dba_password = input('pg_dba_password')
+  #   pg_dba_password = input('pg_dba_password')
 
-    pg_db = input('pg_db')
+  #   pg_db = input('pg_db')
 
-    pg_host = input('pg_host')
+  #   pg_host = input('pg_host')
 
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+  #   sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
 
-    describe sql.query('SHOW password_encryption;', [pg_db]) do
-      its('output') { should match /on|true|scram-sha-256/i }
-    end
-  end
+  #   describe sql.query('SHOW password_encryption;', [pg_db]) do
+  #     its('output') { should match /on|true|scram-sha-256/i }
+  #   end
+  # end
 
   control 'V-233597' do
     desc 'check', "To list all the permissions of individual roles, as the database
