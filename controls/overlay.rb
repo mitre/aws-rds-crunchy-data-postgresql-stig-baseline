@@ -211,7 +211,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     end
   end
 
-  control 'V-233526' do
+  control 'V-233527' do
     describe 'A manual review is require to ensure PostgreSQL and associated applications reserve the use of dynamic
     code execution for situations that require it.' do
       skip 'A manual review is require to ensure PostgreSQL and associated applications reserve the use of dynamic
