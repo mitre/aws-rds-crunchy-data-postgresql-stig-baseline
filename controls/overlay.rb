@@ -238,7 +238,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   control 'V-233530' do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    authorized_owners = input('pg_superusers')
+    authorized_owners = input('rds_superusers')
     pg_db = input('pg_db')
     pg_owner = input('pg_owner')
 
