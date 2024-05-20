@@ -51,13 +51,6 @@ inputs:
   required: true
   sensitive: true
 
-- name: pg_owner_password
-  description: "The postgres database owner password"
-  type: string
-  value: ""
-  required: true
-  sensitive: true
-
 - name: pg_dba
   description: "The postgres DBA user to access the test database"
   type: string
