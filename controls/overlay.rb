@@ -1100,7 +1100,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    pg_superusers = input('pg_superusers')
+    rds_superusers = input('rds_superusers')
     pg_db = input('pg_db')
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
@@ -1108,7 +1108,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     roles = roles_query.lines
 
     roles.each do |role|
-      next if pg_superusers.include?(role)
+      next if rds_superusers.include?(role)
       superuser_sql = 'SELECT r.rolsuper FROM pg_catalog.pg_roles r '\
         "WHERE r.rolname = '#{role}';"
 
@@ -1117,7 +1117,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
       end
     end
 
-    authorized_owners = pg_superusers
+    authorized_owners = rds_superusers
     owners = authorized_owners.join('|')
 
     database_granted_privileges = 'CTc'
