@@ -1102,6 +1102,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     pg_superusers = input('pg_superusers')
     authorized_owners = input('rds_superusers')
+    owners = authorized_owners.join('|')
     pg_db = input('pg_db')
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
@@ -1117,9 +1118,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         its('output') { should_not eq 't' }
       end
     end
-
-    authorized_owners = rds_superusers
-    owners = authorized_owners.join('|')
 
     database_granted_privileges = 'CTc'
     database_public_privileges = 'c'
