@@ -503,16 +503,15 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233543' do
-    desc 'check', "Functions in PostgreSQL can be created with the SECURITY DEFINER
+    desc 'check', 'Functions in PostgreSQL can be created with the SECURITY DEFINER
     option. When SECURITY DEFINER functions are executed by a user, said function
     is run with the privileges of the user who created it.
-    To list all functions that have SECURITY DEFINER, as, the database
-    administrator (shown here as \"postgres\"), run the following SQL:
+    To list all functions that have SECURITY DEFINER, as, the DBA (shown here as "postgres"), run the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig
+    $ psql -c "SELECT nspname, proname, proargtypes, prosecdef, rolname, proconfig
     FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_roles a
-    ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL\"
-    In the query results, a prosecdef value of \"t\" on a row indicates that that
+    ON a.oid = p.proowner WHERE prosecdef OR NOT proconfig IS NULL"
+    In the query results, a prosecdef value of "t" on a row indicates that that
     function uses privilege elevation.
     If elevation of PostgreSQL privileges is utilized but not documented, this is a
     finding.
@@ -520,7 +519,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     described in the documentation, this is a finding.
     If the privilege-elevation logic can be invoked in ways other than intended, or
     in contexts other than intended, or by subjects/principals other than intended,
-    this is a finding."
+    this is a finding.'
 
     pg_dba = input('pg_dba')
 
@@ -562,12 +561,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   control 'V-233544' do
     describe 'Requires manual review of the RDS audit log system.' do
       skip 'Requires manual review of the RDS audit log system.'
-    end
-  end
-
-  control 'V-233545' do
-    describe 'Requires manual review of the use of a centralized logging solution.' do
-      skip 'Requires manual review of the use of a centralized logging solution.'
     end
   end
 
@@ -734,24 +727,24 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233569' do
-    desc 'check', "First, as the database administrator, verify that log_connections
+    desc 'check', 'First, as the database administrator, verify that log_connections
     and log_disconnections are enabled by running the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SHOW log_connections\"
-    $ psql -c \"SHOW log_disconnections\"
+    $ psql -c "SHOW log_connections"
+    $ psql -c "SHOW log_disconnections"
     If either is off, this is a finding.
     Next, verify that log_line_prefix contains sufficient information by running
     the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SHOW log_line_prefix\"
-    If log_line_prefix does not contain at least %t %u %d %p, this is a finding."
+    $ psql -c "SHOW log_line_prefix"
+    If log_line_prefix does not contain at least %t %u %d %p, this is a finding.'
 
-    desc 'fix', "Note: The following instructions use the PGDATA and PGVER
+    desc 'fix', %q(Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
     To ensure that logging is enabled, review supplementary content APPENDIX-C for
     instructions on enabling logging.
-    First, as the database administrator (shown here as \"postgres\"), edit
+    First, as the database administrator (shown here as "postgres"), edit
     postgresql.conf:
     $ sudo su - postgres
     $ vi ${PGDATA?}/postgresql.conf
@@ -768,7 +761,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # SYSTEMD SERVER ONLY
     $ sudo systemctl reload postgresql-${PGVER?}
     # INITD SERVER ONLY
-    $ sudo service postgresql-${PGVER?} reload"
+    $ sudo service postgresql-${PGVER?} reload")
 
     pg_dba = input('pg_dba')
 
@@ -847,13 +840,13 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233581' do
-    desc 'check', "Note: The following instructions use the PGDATA environment
+    desc 'check', 'Note: The following instructions use the PGDATA environment
     variable. See supplementary content APPENDIX-F for instructions on configuring
     PGDATA.
-    First, as the database administrator (shown here as \"postgres\"), verify the
+    First, as the database administrator (shown here as "postgres"), verify the
     current log_line_prefix setting by running the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SHOW log_line_prefix\"
+    $ psql -c "SHOW log_line_prefix"
     If log_line_prefix does not contain %t, this is a finding.
     Next check the logs to verify time stamps are being logged:
     $ sudo su - postgres
@@ -865,9 +858,9 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     < 2016-02-23 12:53:44.372 EDT postgres postgres 570bd68d.3912 >LOG:
     disconnection: session time: 0:00:10.426 user=postgres database=postgres
     host=[local]
-    If time stamps are not being logged, this is a finding."
+    If time stamps are not being logged, this is a finding.'
 
-    desc 'fix', "Note: The following instructions use the PGDATA and PGVER
+    desc 'fix', %q(Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
     PostgreSQL will not log anything if logging is not enabled. To ensure that
@@ -875,7 +868,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     enabling logging.
     If logging is enabled the following configurations must be made to log events
     with time stamps:
-    First, as the database administrator (shown here as \"postgres\"), edit
+    First, as the database administrator (shown here as "postgres"), edit
     postgresql.conf:
     $ sudo su - postgres
     $ vi ${PGDATA?}/postgresql.conf
@@ -885,7 +878,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # SYSTEMD SERVER ONLY
     $ sudo systemctl reload postgresql-${PGVER?}
     # INITD SERVER ONLY
-    $ sudo service postgresql-${PGVER?} reload"
+    $ sudo service postgresql-${PGVER?} reload")
 
     pg_dba = input('pg_dba')
 
