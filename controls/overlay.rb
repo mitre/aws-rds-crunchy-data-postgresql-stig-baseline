@@ -379,6 +379,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('rds_superusers')
     pg_owner = input('pg_owner')
+    pg_db = input('pg_db')
 
     databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
     databases_query = sql.query(databases_sql, [input('pg_db')])
