@@ -378,11 +378,10 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   control 'V-233539' do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     authorized_owners = input('rds_superusers')
-    pg_db = input('pg_db')
     pg_owner = input('pg_owner')
 
     databases_sql = "SELECT datname FROM pg_catalog.pg_database where datname = '#{pg_db}';"
-    databases_query = sql.query(databases_sql, [pg_db])
+    databases_query = sql.query(databases_sql, [input('pg_db')])
     databases = databases_query.lines
     types = %w(t s v) # tables, sequences views
 
@@ -521,15 +520,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     in contexts other than intended, or by subjects/principals other than intended,
     this is a finding.'
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
 
     security_definer_sql = 'SELECT nspname, proname, prosecdef '\
       'FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid '\
@@ -763,28 +755,20 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload")
 
-    pg_dba = input('pg_dba')
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
-
-    describe sql.query('SHOW log_connections;', [pg_db]) do
+    describe sql.query('SHOW log_connections;', [input('pg_db')]) do
       its('output') { should_not match /off|false/i }
     end
 
-    describe sql.query('SHOW log_disconnections;', [pg_db]) do
+    describe sql.query('SHOW log_disconnections;', [input('pg_db')]) do
       its('output') { should_not match /off|false/i }
     end
 
     log_line_prefix_escapes = %w(%t %u %d %p)
 
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
@@ -880,40 +864,32 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload")
 
-    pg_dba = input('pg_dba')
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
-
-    describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+    describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
       its('output') { should match '%t' }
     end
   end
 
   control 'V-233582' do
-    desc 'check', "Check PostgreSQL settings and existing audit records to verify a
+    desc 'check', 'Check PostgreSQL settings and existing audit records to verify a
     user name associated with the event is being captured and stored with the audit
     records. If audit records exist without specific user information, this is a
     finding.
-    First, as the database administrator (shown here as \"postgres\"), verify the
+    First, as the database administrator (shown here as "postgres"), verify the
     current setting of log_line_prefix by running the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SHOW log_line_prefix\"
-    If log_line_prefix does not contain %t, %u, %d, %p, %r, this is a finding."
+    $ psql -c "SHOW log_line_prefix"
+    If log_line_prefix does not contain %t, %u, %d, %p, %r, this is a finding.'
 
-    desc 'fix', "Note: The following instructions use the PGDATA and PGVER
+    desc 'fix', %q(Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
     Logging must be enabled in order to capture the identity of any user/subject or
     process associated with an event. To ensure that logging is enabled, review
     supplementary content APPENDIX-C for instructions on enabling logging.
     To enable username, database name, process ID, remote host/port and application
-    name in logging, as the database administrator (shown here as \"postgres\"),
+    name in logging, as the database administrator (shown here as "postgres"),
     edit the following in postgresql.conf:
     $ sudo su - postgres
     $ vi ${PGDATA?}/postgresql.conf
@@ -922,22 +898,14 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # SYSTEMD SERVER ONLY
     $ sudo systemctl reload postgresql-${PGVER?}
     # INITD SERVER ONLY
-    $ sudo service postgresql-${PGVER?} reload"
+    $ sudo service postgresql-${PGVER?} reload)
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = %w(%t %u %d %p %r)
 
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
@@ -1014,24 +982,16 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     # INITD SERVER ONLY
     $ sudo service postgresql-${PGVER?} reload"
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = %w(%u %d %r %p %t)
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
 
-    describe sql.query('SHOW log_hostname;', [pg_db]) do
+    describe sql.query('SHOW log_hostname;', [input('pg_db')]) do
       its('output') { should match /(on|true)/i }
     end
   end
@@ -1059,37 +1019,29 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233596' do
-    pg_dba = input('pg_dba')
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
-
-    describe sql.query('SHOW password_encryption;', [pg_db]) do
+    describe sql.query('SHOW password_encryption;', [input('pg_db')]) do
       its('output') { should match /on|true|scram-sha-256/i }
     end
   end
 
   control 'V-233597' do
-    desc 'check', "To list all the permissions of individual roles, as the database
-    administrator (shown here as \"postgres\"), run the following SQL:
-    $ psql -c \"\\du
+    desc 'check', 'To list all the permissions of individual roles, as the database
+    administrator (shown here as "postgres"), run the following SQL:
+    $ psql -c "\du
     If any role has SUPERUSER that should not, this is a finding.
     Next, list all the permissions of databases and schemas by running the following SQL:
-    $ psql -c \"\\l\"
-    $ psql -c \"\\dn+\"
-    If any database or schema has update (\"W\") or create (\"C\") privileges and should
-    not, this is a finding."
-    desc 'fix', "Configure PostgreSQL to enforce access restrictions associated with
+    $ psql -c "\l"
+    $ psql -c "\dn+"
+    If any database or schema has update ("W") or create ("C") privileges and should
+    not, this is a finding.'
+    desc 'fix', 'Configure PostgreSQL to enforce access restrictions associated with
     changes to the configuration of PostgreSQL or database(s).
     Use ALTER ROLE to remove accesses from roles:
-    $ psql -c \"ALTER ROLE <role_name> NOSUPERUSER\"
+    $ psql -c "ALTER ROLE <role_name> NOSUPERUSER"
     Use REVOKE to remove privileges from databases and schemas:
-    $ psql -c \"REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;"
+    $ psql -c "REVOKE ALL PRIVILEGES ON <table> FROM <role_name>;'
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
@@ -1156,18 +1108,18 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233598' do
-    desc 'check', "First, as the database administrator, review the current
+    desc 'check', %q(First, as the database administrator, review the current
     log_line_prefix settings by running the following SQL:
     $ sudo su - postgres
-    $ psql -c \"SHOW log_line_prefix\"
+    $ psql -c "SHOW log_line_prefix"
     If log_line_prefix does not contain at least '< %t %u %d %r %p %t >', this
     is a finding.
     Next, review the current shared_preload_libraries settings by running the
     following SQL:
-    $ psql -c \"SHOW shared_preload_libraries\"
-    If shared_preload_libraries does not contain \"pgaudit\", this is a finding."
+    $ psql -c "SHOW shared_preload_libraries"
+    If shared_preload_libraries does not contain "pgaudit", this is a finding.)
 
-    desc 'fix', "Note: The following instructions use the PGDATA and PGVER
+    desc 'fix', %q(Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
     Configure the database to supply additional auditing information to protect
@@ -1179,7 +1131,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     instructions on enabling logging.
     Modify the configuration of audit logs to include details identifying the
     individual user:
-    First, as the database administrator (shown here as \"postgres\"), edit
+    First, as the database administrator (shown here as "postgres"), edit
     postgresql.conf:
     $ sudo su - postgres
     $ vi ${PGDATA?}/postgresql.conf
@@ -1193,27 +1145,19 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     $ sudo service postgresql-${PGVER?} reload
     Use accounts assigned to individual users. Where the application connects to
     PostgreSQL using a standard, shared account, ensure that it also captures the
-    individual user identification and passes it to PostgreSQL."
+    individual user identification and passes it to PostgreSQL.)
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = %w(%t %u %d %p %r)
 
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
 
-    describe sql.query('SHOW shared_preload_libraries;', [pg_db]) do
+    describe sql.query('SHOW shared_preload_libraries;', [input('pg_db')]) do
       its('output') { should include 'pgaudit' }
     end
   end
@@ -1242,9 +1186,9 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233604' do
-    desc 'check', "As the database administrator (shown here as \"postgres\"),
+    desc 'check', 'As the database administrator (shown here as "postgres"),
     verify the current log_line_prefix setting:
-    $ psql -c \"SHOW log_line_prefix\"
+    $ psql -c "SHOW log_line_prefix"
 
     Verify that the current settings are appropriate for the organization.
 
@@ -1273,10 +1217,10 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     Next, verify the current settings of log_connections and log_disconnections by
     running the following SQL:
 
-    $ psql -c \"SHOW log_connections\"
-    $ psql -c \"SHOW log_disconnections\"
+    $ psql -c "SHOW log_connections"
+    $ psql -c "SHOW log_disconnections"
 
-    If both settings are off, this is a finding."
+    If both settings are off, this is a finding.'
 
     desc 'fix', "Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
@@ -1297,28 +1241,20 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     Now, as the system administrator, reload the server with the new configuration"
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = %w(%t %u %d %p)
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
 
-    describe sql.query('SHOW log_connections;', [pg_db]) do
+    describe sql.query('SHOW log_connections;', [input('pg_db')]) do
       its('output') { should_not match /off|false/i }
     end
 
-    describe sql.query('SHOW log_disconnections;', [pg_db]) do
+    describe sql.query('SHOW log_disconnections;', [input('pg_db')]) do
       its('output') { should_not match /off|false/i }
     end
   end
@@ -1335,7 +1271,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     $ psql -c \"SHOW log_line_prefix\"
     If the query result does not contain \"%t\", this is a finding."
 
-    desc 'fix', "Note: The following instructions use the PGDATA and PGVER
+    desc 'fix', %q(Note: The following instructions use the PGDATA and PGVER
     environment variables. See supplementary content APPENDIX-F for instructions on
     configuring PGDATA and APPENDIX-H for PGVER.
     Logging must be enabled in order to capture timestamps. To ensure that logging
@@ -1346,22 +1282,14 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     Add %m to log_line_prefix to enable timestamps with milliseconds:
     log_line_prefix = '< %t >'
-    Now, as the system administrator, reload the server with the new configuration"
+    Now, as the system administrator, reload the server with the new configuration)
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = ['%t']
 
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
@@ -1381,32 +1309,31 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233612' do
-    desc 'check', "Review PostgreSQL settings to determine whether organizational users
+    desc 'check', 'Review PostgreSQL settings to determine whether organizational users
     are uniquely identified and authenticated when logging on/connecting to the system.
     To list all roles in the database, as the database administrator (shown here as
-    \"postgres\"), run the following SQL:
-    $ psql -c \"\\du\"
+    "postgres"), run the following SQL:
+    $ psql -c "\du"
     If organizational users are not uniquely identified and authenticated, this is a
-    finding."
+    finding.'
 
-    desc 'fix', "Note: The following instructions use the PGDATA environment variable.
+    desc 'fix', 'Note: The following instructions use the PGDATA environment variable.
     See supplementary content APPENDIX-F for instructions on configuring PGDATA.
     Configure PostgreSQL settings to uniquely identify and authenticate all
     organizational users who log on/connect to the system.
     To create roles, use the following SQL:
     CREATE ROLE <role_name> [OPTIONS]
     For more information on CREATE ROLE, see the official documentation:
-    https://www.postgresql.org/docs/current/static/sql-createrole.html"
+    https://www.postgresql.org/docs/current/static/sql-createrole.html'
 
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
     pg_users = input('pg_users')
-    pg_db = input('pg_db')
 
     authorized_roles = pg_users
 
     roles_sql = 'SELECT r.rolname FROM pg_catalog.pg_roles r;'
 
-    describe sql.query(roles_sql, [pg_db]) do
+    describe sql.query(roles_sql, [input('pg_db')]) do
       its('lines.sort') { should cmp authorized_roles.sort }
     end
   end
@@ -1476,13 +1403,10 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
   end
 
   control 'V-233578' do
-    desc 'check', "Note: The following instructions use the PGDATA environment
-    variable. See supplementary content APPENDIX-F for instructions on configuring
-    PGDATA.
-    First, as the database administrator (shown here as \"postgres\"), check the
+    desc 'check', 'First, as the database administrator (shown here as "postgres"), check the
     current log_line_prefix setting by running the following SQL:
-    $ psql -c \"SHOW log_line_prefix\"
-    If log_line_prefix does not contain %t %u %d, this is a finding."
+    $ psql -c "SHOW log_line_prefix"
+    If log_line_prefix does not contain %t %u %d, this is a finding.'
 
     desc 'fix', "Note: The following instructions use the PGDATA environment
     variable. See supplementary content APPENDIX-F for instructions on configuring
@@ -1505,20 +1429,12 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     log_line_prefix = '< %t %a %u %d %r %p %i %e %s>’
     Now, as the system administrator, reload the server with the new configuration"
 
-    pg_dba = input('pg_dba')
-
-    pg_dba_password = input('pg_dba_password')
-
-    pg_db = input('pg_db')
-
-    pg_host = input('pg_host')
-
-    sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
+    sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     log_line_prefix_escapes = %w(%t %u %d)
 
     log_line_prefix_escapes.each do |escape|
-      describe sql.query('SHOW log_line_prefix;', [pg_db]) do
+      describe sql.query('SHOW log_line_prefix;', [input('pg_db')]) do
         its('output') { should include escape }
       end
     end
