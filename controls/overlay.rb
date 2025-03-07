@@ -1056,6 +1056,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     roles = roles_query.lines
 
     roles.each do |role|
+      # Only execute the code if the role being processed is NOT included in pg_superusers object
       next if pg_superusers.include?(role)
       superuser_sql = 'SELECT r.rolsuper FROM pg_catalog.pg_roles r '\
         "WHERE r.rolname = '#{role}';"
@@ -1089,10 +1090,10 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         its('output') { should match database_acl_regex }
       end
 
-      schemas_sql = 'SELECT n.nspname, FROM pg_catalog.pg_namespace n '\
+      schemas_sql = 'SELECT n.nspname FROM pg_catalog.pg_namespace n '\
         "WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema';"
       schemas_query = sql.query(schemas_sql, [database])
-      # Handle connection disabled on database
+      # Handle connection disabled on database (only process user defined dbs)
       next unless schemas_query.methods.include?(:output)
       schemas = schemas_query.lines
 
@@ -1100,7 +1101,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         nspacl_sql = "SELECT pg_catalog.array_to_string(n.nspacl, E','), "\
           'n.nspname FROM pg_catalog.pg_namespace n '\
           "WHERE n.nspname = '#{schema}';"
-
+        # If the db name is not specified it defaults to the user name executing the query
         describe sql.query(nspacl_sql) do
           its('output') { should match schema_acl_regex }
         end
