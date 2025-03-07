@@ -1101,7 +1101,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
           'n.nspname FROM pg_catalog.pg_namespace n '\
           "WHERE n.nspname = '#{schema}';"
 
-        describe sql.query(nspacl_sql, [pg_db]) do
+        describe sql.query(nspacl_sql) do
           its('output') { should match schema_acl_regex }
         end
       end
