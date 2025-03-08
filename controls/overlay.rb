@@ -1047,8 +1047,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
 
     pg_superusers = input('pg_superusers')
-    # authorized_owners = input('rds_superusers')
-    authorized_owners = input('pg_superusers')
+    authorized_owners = input('rds_superusers')
+    # authorized_owners = input('pg_superusers')
     owners = authorized_owners.join('|')
     pg_db = input('pg_db')
 
@@ -1067,10 +1067,13 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
       end
     end
 
+    # database_granted_privileges = 'CTc'
+    # database_public_privileges = 'c'
+    # database_acl = "^((((#{owners})=[#{database_granted_privileges}]+|"\
+    #  "=[#{database_public_privileges}]+)\/\\w+,?)+|)\\|"
     database_granted_privileges = 'CTc'
-    database_public_privileges = 'c'
-    database_acl = "^((((#{owners})=[#{database_granted_privileges}]+|"\
-      "=[#{database_public_privileges}]+)\/\\w+,?)+|)\\|"
+    database_public_privileges = 'Tc'
+    database_acl = "((?:=#{database_public_privileges}\/)|(?:=#{database_granted_privileges}\/)*)(#{owners})(?:,(#{owners}))*"
     database_acl_regex = Regexp.new(database_acl)
 
     schema_granted_privileges = 'UC'
