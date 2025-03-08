@@ -1078,8 +1078,9 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
     schema_granted_privileges = 'UC'
     schema_public_privileges = 'U'
-    schema_acl = "^((((#{owners})=[#{schema_granted_privileges}]+|"\
-      "=[#{schema_public_privileges}]+)\/\\w+,?)+|)\\|"
+    # schema_acl = "^((((#{owners})=[#{schema_granted_privileges}]+|"\
+    #  "=[#{schema_public_privileges}]+)\/\\w+,?)+|)\\|"
+    schema_acl = "(?:(#{owners})*)((?:=#{schema_granted_privileges}\/)|(?:=#{schema_public_privileges}\/))*(\s?|\w+)?"
     schema_acl_regex = Regexp.new(schema_acl)
 
     databases_sql = 'SELECT datname FROM pg_catalog.pg_database where not datistemplate AND datname != \'rdsadmin\';'
@@ -1106,7 +1107,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
           'n.nspname FROM pg_catalog.pg_namespace n '\
           "WHERE n.nspname = '#{schema}';"
         # If the db name is not specified it defaults to the user name executing the query
-        describe sql.query(nspacl_sql) do
+        describe sql.query(nspacl_sql [database]) do
           its('output') { should match schema_acl_regex }
         end
       end
