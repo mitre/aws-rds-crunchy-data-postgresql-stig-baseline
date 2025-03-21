@@ -149,8 +149,10 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
       object_acl_regex = Regexp.new(object_acl)
 
+      # pg_settings_acl = "^((((#{supperusers})=[#{object_granted_privileges}]+|"\
+      #   "=rw)\/\\w+,?)+)\\|pg_catalog\\|pg_settings\\|v"
       pg_settings_acl = "^((((#{supperusers})=[#{object_granted_privileges}]+|"\
-        "=rw)\/\\w+,?)+)\\|pg_catalog\\|pg_settings\\|v"
+        "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
       pg_settings_acl_regex = Regexp.new(pg_settings_acl)
 
       tested = []
