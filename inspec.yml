@@ -37,6 +37,13 @@ inputs:
     - ""
   sensitive: true
 
+- name: pg_system_resource_users
+  description: "Members that have logical access to information and system resources"
+  type: array
+  value:
+    - ""
+  sensitive: true
+
 - name: pg_owner
   description: "The system user of the postgres process"
   type: string
