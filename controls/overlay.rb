@@ -139,6 +139,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     if !input('windows_runner')
       sql = postgres_session(input('pg_dba'), input('pg_dba_password'), input('pg_host'), input('pg_port'))
       authorized_owners = input('pg_superusers')
+      supperusers = authorized_owners.join('|')
+      authorized_owners = input('pg_system_resource_users')
       owners = authorized_owners.join('|')
 
       object_granted_privileges = 'arwdDxtU'
@@ -147,7 +149,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
       object_acl_regex = Regexp.new(object_acl)
 
-      pg_settings_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
+      pg_settings_acl = "^((((#{supperusers})=[#{object_granted_privileges}]+|"\
         "=rw)\/\\w+,?)+)\\|pg_catalog\\|pg_settings\\|v"
       pg_settings_acl_regex = Regexp.new(pg_settings_acl)
 
