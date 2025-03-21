@@ -85,7 +85,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         end
       end
 
-      authorized_owners = input('pg_superusers')
+      #authorized_owners = input('pg_superusers')
+      authorized_owners = input('pg_system_resource_users')
       owners = authorized_owners.join('|')
 
       object_granted_privileges = 'arwdDxtU'
