@@ -37,6 +37,7 @@ inputs:
     - ""
   sensitive: true
 
+# V-233520, V-233523
 - name: pg_system_resource_users
   description: "Members that have logical access to information and system resources"
   type: array
