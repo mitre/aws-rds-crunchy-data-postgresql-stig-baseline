@@ -577,7 +577,6 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
     object_acl = "^(((#{pg_owner}|rdsadmin=[#{pg_object_granted_privileges}]+|"\
       "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
-    # object_acl = "^((?:\w+=([#{pg_object_granted_privileges}]*)\/#{pg_owner})(,(\w+|)=[r|#{pg_object_public_privileges}]]\/#{pg_owner}|rdsadmin)*)$"
     
     schemas = ['pg_catalog', 'information_schema']
     sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
