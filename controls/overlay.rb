@@ -577,7 +577,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
     exceptions = "#{pg_object_exceptions.map { |e| "'#{e}'" }.join(',')}"
     object_acl = "^(((#{pg_owner}|rdsadmin=[#{pg_object_granted_privileges}]+|"\
       "=[#{pg_object_public_privileges}]+)\\/\\w+,?)+|)$"
-    # object_acl = "^(?:\w+=([#{pg_object_granted_privileges}]*)\/#{pg_owner})(,(\w+|)=[r|#{pg_object_public_privileges}]]\/#{pg_owner}|rdsadmin)*$"
+    # object_acl = "^((?:\w+=([#{pg_object_granted_privileges}]*)\/#{pg_owner})(,(\w+|)=[r|#{pg_object_public_privileges}]]\/#{pg_owner}|rdsadmin)*)$"
     
     schemas = ['pg_catalog', 'information_schema']
     sql = postgres_session(pg_dba, pg_dba_password, pg_host, input('pg_port'))
@@ -588,7 +588,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
         'LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace '\
         "WHERE c.relkind IN ('r', 'v', 'm', 'S', 'f') "\
         "AND n.nspname ~ '^(#{schema})$' "\
-        "AND pg_catalog.array_to_string(c.relacl, E',') ~ '#{object_acl}' "\
+        "AND pg_catalog.array_to_string(c.relacl, E',') !~ '#{object_acl}' "\
         "AND c.relname NOT IN (#{exceptions});"
 
       describe sql.query(objects_sql, [pg_db]) do
