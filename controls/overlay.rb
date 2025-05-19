@@ -91,7 +91,7 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
       authorized_owners = input('pg_system_resource_users')
       owners = authorized_owners.join('|')
 
-      object_granted_privileges = 'arwdDxtU'
+      object_granted_privileges = 'arwdDxtU?'
       object_public_privileges = 'r'
       object_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
         "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
