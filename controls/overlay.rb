@@ -93,7 +93,8 @@ include_controls 'crunchy-data-postgresql-stig-baseline' do
 
       #object_granted_privileges = 'arwdDxtU?'
       object_granted_privileges = 'arwd(DxtU?|)?'
-      object_public_privileges = 'r'
+      #object_public_privileges = 'r'
+      object_public_privileges = '(r|arw|rw|arwd|rU)'
       object_acl = "^((((#{owners})=[#{object_granted_privileges}]+|"\
         "=[#{object_public_privileges}]+)\/\\w+,?)+|)\\|"
       object_acl_regex = Regexp.new(object_acl)
